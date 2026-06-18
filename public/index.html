@@ -88,7 +88,9 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .sub-item .sel b{color:var(--ink);font-weight:600}
 .empty{color:var(--muted);font-size:13.5px;padding:30px;text-align:center;border:1px dashed var(--line);border-radius:var(--rad)}
 footer{border-top:1px solid var(--line);padding:18px 0;font-size:12px;color:var(--muted)}
-</style></head><body>
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head><body>
 <header><div class="wrap">
   <div class="head-in">
     <div class="logo">LEO<b>PLE</b></div>
@@ -350,20 +352,71 @@ async function saveSubmission(){
   const email=document.getElementById('cEmail').value.trim();
   if(!name){alert("작성자 이름을 입력해주세요");return;}
   if(area<=0){alert("평수를 입력해주세요");return;}
-  const c=calc();const rec={name,phone,email,area,facade_type:null,selections:collectPicks(),total:c.p7};
+  const c=calc();const rec={name,phone,email,area,facade_type:null,selections:collectPicks(),total:c.p7,
+    breakdown:{p1:c.p1,p2:c.p2,p3:c.p3,p4:c.p4,p5:c.p5,p6:c.p6,p7:c.p7},
+    rates:{ins:rate('ins'),base:rate('base'),mgmt:rate('mgmt'),vat:rate('vat')}};
   if(USE_API){await api('/api/submissions','POST',rec);}
   else{const subs=lsGet();subs.unshift({id:Date.now(),at:new Date().toLocaleString('ko-KR'),...rec});lsSet(subs);}
   document.getElementById('cName').value="";document.getElementById('cPhone').value="";document.getElementById('cEmail').value="";
   alert("견적이 저장되었습니다. '저장된 견적' 탭에서 확인하세요.");}
 async function getSubs(){if(USE_API){try{return await api('/api/submissions','GET');}catch(e){return [];}}return lsGet();}
-async function renderSubs(){const subs=await getSubs();const box=document.getElementById('subBuild');
+let SUBS_CACHE=[];
+async function renderSubs(){const subs=await getSubs();SUBS_CACHE=subs;const box=document.getElementById('subBuild');
   if(!subs.length){box.innerHTML=`<div class="empty">아직 저장된 견적이 없습니다. 고객 견적 탭에서 정보를 입력하고 "이 견적 저장하기"를 눌러보세요.</div>`;return;}
-  box.innerHTML=`<div class="sub-list">`+subs.map(su=>`<div class="sub-item">
+  box.innerHTML=`<div style="margin:0 0 14px"><button class="btn teal" onclick="exportAll()">전체 목록 엑셀 다운로드 (${subs.length}건)</button></div>
+    <div class="sub-list">`+subs.map(su=>`<div class="sub-item">
     <div class="sh"><div><span class="who">${su.name}</span> <span class="when">· ${su.area}평 · ${su.at}</span><div class="when">${su.phone||""} ${su.email||""}</div></div>
       <div class="tot">${won(su.total)} <span style="font-size:12px;font-weight:500">만원</span></div></div>
     <div class="sel">${su.selections.map(p=>`<b>${p.name}</b> <span style="color:#aaa">[${p.code}]</span> ${won(p.amount)}만`).join(" · ")}</div>
-    <div style="margin-top:8px"><button class="del" onclick="delSub(${su.id})">삭제</button></div></div>`).join("")+`</div>`;}
+    <div style="margin-top:10px;display:flex;gap:8px"><button class="btn teal sm" onclick="exportOne(${su.id})">이 견적 엑셀 다운로드</button><button class="del" onclick="delSub(${su.id})">삭제</button></div></div>`).join("")+`</div>`;}
 async function delSub(id){if(USE_API){await fetch('/api/submissions?id='+id,{method:'DELETE'});}else{lsSet(lsGet().filter(s=>s.id!==id));}renderSubs();}
+
+// 합계 분해 — 저장된 값 있으면 사용, 없으면 선택금액 합 + 현재 요율로 재계산
+function breakdownOf(su){
+  if(su.breakdown&&su.breakdown.p7!=null)return su.breakdown;
+  const p1=Math.round((su.selections||[]).reduce((a,p)=>a+(p.amount||0),0));
+  const R=su.rates||{ins:rate('ins'),base:rate('base'),mgmt:rate('mgmt'),vat:rate('vat')};
+  const p2=Math.round(p1/100*R.ins),p3=Math.round(su.area*R.base),p4=Math.round(p1/100*R.mgmt);
+  const p5=p1+p2+p3+p4,p6=Math.floor(p5/100*R.vat);return {p1,p2,p3,p4,p5,p6,p7:p5+p6};
+}
+function safeName(s){return String(s||'견적').replace(/[\\/:*?"<>|]/g,'_').slice(0,40);}
+// 건별 상세 엑셀
+function exportOne(id){
+  const su=SUBS_CACHE.find(s=>String(s.id)===String(id));if(!su)return;
+  const b=breakdownOf(su);const R=su.rates||{ins:rate('ins'),base:rate('base'),mgmt:rate('mgmt'),vat:rate('vat')};
+  const aoa=[
+    ['레오플 간편견적서'],[],
+    ['작성일',su.at||''],['작성자',su.name||''],['연락처',su.phone||''],['이메일',su.email||''],
+    ['건축 평수',su.area],[],
+    ['공정 / 항목','코드','금액(만원)']
+  ];
+  (su.selections||[]).forEach(p=>aoa.push([p.name,p.code,p.amount]));
+  aoa.push([]);
+  aoa.push(['직접공사비','',b.p1]);
+  aoa.push([`보험료 등 (${R.ins}%)`,'',b.p2]);
+  aoa.push([`평당 기본경비 (${R.base}만/평)`,'',b.p3]);
+  aoa.push([`일반관리비·이윤 (${R.mgmt}%)`,'',b.p4]);
+  aoa.push(['공급가액','',b.p5]);
+  aoa.push([`부가세 (${R.vat}%)`,'',b.p6]);
+  aoa.push(['총 견적금액','',b.p7]);
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols']=[{wch:34},{wch:16},{wch:14}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'견적서');
+  XLSX.writeFile(wb,`견적_${safeName(su.name)}_${su.area}평.xlsx`);
+}
+// 전체 목록 엑셀
+function exportAll(){
+  if(!SUBS_CACHE.length)return;
+  const head=['작성일','작성자','연락처','이메일','평수','직접공사비','보험료등','평당경비','관리비이윤','공급가액','부가세','총액(만원)','선택항목'];
+  const rows=SUBS_CACHE.map(su=>{const b=breakdownOf(su);
+    const items=(su.selections||[]).map(p=>`${p.name}(${won(p.amount)}만)`).join(' / ');
+    return [su.at||'',su.name||'',su.phone||'',su.email||'',su.area,b.p1,b.p2,b.p3,b.p4,b.p5,b.p6,b.p7,items];});
+  const ws=XLSX.utils.aoa_to_sheet([head,...rows]);
+  ws['!cols']=[{wch:20},{wch:12},{wch:15},{wch:22},{wch:7},{wch:11},{wch:10},{wch:10},{wch:11},{wch:11},{wch:9},{wch:12},{wch:60}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'견적목록');
+  const d=new Date();const ymd=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  XLSX.writeFile(wb,`레오플_견적목록_${ymd}.xlsx`);
+}
 
 function showTab(w){const m={est:'p-est',adm:'p-adm',sub:'p-sub'};
   for(const k in m)document.getElementById(m[k]).classList.toggle('on',k===w);
