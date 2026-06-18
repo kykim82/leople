@@ -297,10 +297,10 @@ function onArea(v){area=parseFloat(v)||0;renderEstimate();const a=document.getEl
 function resetEstimate(){
   if(!confirm("선택한 항목과 입력 내용을 모두 초기화할까요?"))return;
   for(const k in sel)delete sel[k];
-  area=20;
+  area=0;
   ['cName','cPhone','cEmail'].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   refresh();
-  const a=document.getElementById('area');if(a)a.value=20;
+  const a=document.getElementById('area');if(a)a.value="";
 }
 function pickRadio(g,id){for(const s of SECTIONS)if(s.group===g)for(const it of s.items)delete sel[it.id];sel[id]=true;refresh();}
 function toggle(id,on){if(on)sel[id]=true;else delete sel[id];refresh();}
