@@ -25,19 +25,12 @@ header{border-bottom:1px solid var(--line);background:linear-gradient(var(--pape
 .tab .dot{display:inline-block;width:7px;height:7px;border-radius:2px;background:var(--indigo);margin-right:7px;vertical-align:middle}
 .tab.t2 .dot{background:var(--teal)}.tab.t3 .dot{background:var(--amber)}
 main{padding:24px 0 80px}.panel{display:none}.panel.on{display:block}
-.grid{display:grid;grid-template-columns:1fr 350px;gap:24px;align-items:stretch}
+.grid{display:grid;grid-template-columns:1fr 350px;gap:24px;align-items:start}
 @media(max-width:880px){.grid{grid-template-columns:1fr}}
 .card{background:var(--white);border:1px solid var(--line);border-radius:var(--rad)}.card+.card{margin-top:14px}
 .card h2{font-family:var(--disp);font-size:13px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--indigo);margin:0;padding:13px 16px;border-bottom:1px solid var(--line2);display:flex;align-items:center;gap:9px}
 .card h2 .no{font-size:11px;color:#fff;background:var(--indigo);width:20px;height:20px;display:grid;place-items:center;border-radius:3px}
-.card h2 .pick{font-size:10px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:100px;padding:3px 9px;text-transform:none}
-.card h2{cursor:pointer;user-select:none}
-.card h2 .caret{font-size:16px;font-weight:700;color:var(--indigo);transition:transform .15s;display:inline-block;width:20px;text-align:center}
-.card.open h2 .caret{transform:rotate(90deg)}
-.card .body{display:none}
-.card.open .body{display:block}
-.card h2 .right{margin-left:auto;display:flex;align-items:center;gap:9px}
-.card h2 .sec-sum{font-family:var(--disp);font-weight:600;font-size:13px;color:var(--indigo);font-variant-numeric:tabular-nums;text-transform:none}
+.card h2 .pick{margin-left:auto;font-size:10px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:100px;padding:3px 9px;text-transform:none}
 .body{padding:6px 16px 14px}
 .area-row{display:flex;align-items:center;gap:12px;padding:15px 16px;flex-wrap:wrap}
 .area-row label{font-family:var(--disp);font-weight:600}
@@ -86,20 +79,6 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .rate-item .rk{font-size:12.5px;font-weight:600}.rate-item .rd{font-size:11px;color:var(--muted);margin-bottom:8px}
 .rate-item .rin{display:flex;align-items:center;gap:7px}.rate-item .rin .suf{font-size:12px;color:var(--muted)}
 .del{color:#B42318;background:none;border:1px solid #F0C7C2;border-radius:var(--rad);font-size:11px;padding:4px 9px;cursor:pointer;font-family:var(--disp)}
-.optx{color:#B42318;background:none;border:none;cursor:pointer;font-size:15px;line-height:1;padding:0 6px}
-.addopt{font-family:var(--disp);font-weight:600;font-size:11.5px;color:var(--teal);background:var(--teal-soft);border:none;border-radius:var(--rad);padding:5px 10px;cursor:pointer;margin:4px 0 2px}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(20,22,28,.45);z-index:50;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
-.modal-bg.on{display:flex}
-.modal{background:var(--white);border-radius:8px;max-width:520px;width:100%;padding:22px 22px 18px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
-.modal h4{font-family:var(--disp);font-size:16px;margin:0 0 16px;color:var(--ink)}
-.modal label{display:block;font-size:12.5px;font-weight:600;color:var(--ink);margin:12px 0 5px}
-.modal input,.modal select{width:100%;font-family:var(--body);font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:var(--rad);background:var(--paper)}
-.modal input:focus,.modal select:focus{outline:2px solid var(--teal);outline-offset:-1px;background:#fff}
-.modal .row2{display:flex;gap:10px}.modal .row2>div{flex:1}
-.optrow{display:flex;gap:8px;align-items:center;margin-bottom:7px}
-.optrow input.l{flex:2}.optrow input.u{flex:1}
-.modal-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
-.hint{font-size:11.5px;color:var(--muted);margin-top:5px}
 .sub-list{display:flex;flex-direction:column;gap:10px}
 .sub-item{background:var(--white);border:1px solid var(--line);border-radius:var(--rad);padding:13px 16px}
 .sub-item .sh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
@@ -108,10 +87,17 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .sub-item .sel{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6}
 .sub-item .sel b{color:var(--ink);font-weight:600}
 .empty{color:var(--muted);font-size:13.5px;padding:30px;text-align:center;border:1px dashed var(--line);border-radius:var(--rad)}
+.modal{position:fixed;inset:0;background:rgba(26,28,32,.38);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.modal.on{display:flex}
+.dialog{width:min(520px,100%);background:var(--white);border:1px solid var(--line);border-radius:var(--rad);box-shadow:0 18px 55px rgba(26,28,32,.2);padding:22px}
+.dialog h3{font-family:var(--disp);font-size:18px;margin:0 0 18px}.dialog h3 b{color:var(--teal)}
+.field{margin-bottom:12px}.field label{display:block;font-family:var(--disp);font-weight:600;font-size:13px;margin-bottom:6px}
+.field input,.field select{width:100%;font-family:var(--body);font-size:14px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--rad);background:var(--paper);color:var(--ink)}
+.field input:focus,.field select:focus{outline:2px solid var(--teal);outline-offset:-1px;background:#fff}
+.dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.dialog-actions .btn.primary{width:auto}
 footer{border-top:1px solid var(--line);padding:18px 0;font-size:12px;color:var(--muted)}
-</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-</head><body>
+</style></head><body>
 <header><div class="wrap">
   <div class="head-in">
     <div class="logo">LEO<b>PLE</b></div>
@@ -135,7 +121,6 @@ footer{border-top:1px solid var(--line);padding:18px 0;font-size:12px;color:var(
         <input id="cPhone" placeholder="연락처">
         <input id="cEmail" placeholder="이메일">
         <button class="btn primary" onclick="saveSubmission()">이 견적 저장하기</button>
-        <button class="btn ghost" style="width:100%;margin-top:7px" onclick="resetEstimate()">전체 초기화</button>
       </div>
       <div class="note">셀프견적은 표준금액 기준 개략 참고용이며 현장 여건에 따라 달라질 수 있습니다. (데모: 저장은 이 브라우저에만 기록됩니다)</div>
     </div></aside>
@@ -145,43 +130,40 @@ footer{border-top:1px solid var(--line);padding:18px 0;font-size:12px;color:var(
     <div id="adminBuild"></div>
     <div class="a-card"><h3>전체 적용 요율 · 부대비</h3><div class="rate-grid" id="rateBuild"></div></div>
   </section>
-
-  <div class="modal-bg" id="addModal"><div class="modal">
-    <h4>새 항목 추가 — <span id="amSec" style="color:var(--teal)"></span></h4>
-    <label>항목 이름</label>
-    <input id="amName" placeholder="예: 아스팔트 슁글">
-    <label>의미 코드 <span style="font-weight:400;color:var(--muted)">(영문, 2단계 도면용 · 생략 가능)</span></label>
-    <input id="amCode" placeholder="예: roof_asphalt">
-    <label>계산 방식</label>
-    <select id="amType" onchange="amTypeChange()">
-      <option value="areaCheck">평당단가 · 체크박스 (선택 시 평수×단가)</option>
-      <option value="areaSelect">평당단가 · 드롭다운 (종류 중 택1, 평수×단가)</option>
-      <option value="count">개수형 (개수×단가)</option>
-      <option value="flatCheck">정액 · 체크박스 (선택 시 고정금액)</option>
-      <option value="flatSelect">정액 · 드롭다운 (종류 중 택1, 고정금액)</option>
-      <option value="areaInput">입력평 × 단가 (다락식)</option>
-      <option value="areaInputSelect">입력평 × 종류단가 (데크식)</option>
-      <option value="unitcount">단가 × 개수 (천창식: 종류 단가 × 개수)</option>
-    </select>
-    <div id="amUnitWrap"><label>단가 (만원)</label><input id="amUnit" type="number" step="0.01" value="0"></div>
-    <div id="amCountWrap" style="display:none"><div class="row2">
-      <div><label>최대 개수</label><input id="amMaxc" type="number" value="20"></div>
-      <div><label>단위</label><input id="amCu" value="개"></div></div></div>
-    <div id="amOptWrap" style="display:none">
-      <label>선택지 <span style="font-weight:400;color:var(--muted)">(종류별 이름과 단가)</span></label>
-      <div id="amOptList"></div>
-      <button class="addopt" onclick="amAddOptRow()">+ 선택지 추가</button>
-    </div>
-    <div class="modal-btns">
-      <button class="btn ghost" onclick="closeAdd()">취소</button>
-      <button class="btn primary" style="width:auto;padding:10px 20px" onclick="submitAdd()">추가</button>
-    </div>
-  </div></div>
   <section class="panel" id="p-sub">
     <p class="admin-intro">고객이 "이 견적 저장하기"를 누르면 여기에 쌓입니다. 평수, 선택 항목(의미 태그 포함), 총액이 함께 저장돼요. 이게 2단계 도면·렌더의 입력 데이터가 됩니다.</p>
     <div id="subBuild"></div>
   </section>
 </div></main>
+<div class="modal" id="addModal" aria-hidden="true">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+    <h3 id="addTitle">새 항목 추가 – <b id="addSectionName"></b></h3>
+    <div class="field">
+      <label for="addName">항목 이름</label>
+      <input id="addName" placeholder="예: 아스팔트 싱글">
+    </div>
+    <div class="field">
+      <label for="addCode">의미 코드 (영문, 2단계 도면용 · 생략 가능)</label>
+      <input id="addCode" placeholder="예: roof_asphalt">
+    </div>
+    <div class="field">
+      <label for="addMode">계산 방식</label>
+      <select id="addMode">
+        <option value="area">평당단가 · 체크박스 (선택 시 평수×단가)</option>
+        <option value="flat">정액 · 체크박스 (선택 시 단가 그대로)</option>
+        <option value="count">개수×단가 (개수 선택)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="addUnit">단가 (만원)</label>
+      <input id="addUnit" type="number" step="0.01" value="0">
+    </div>
+    <div class="dialog-actions">
+      <button class="btn ghost" onclick="closeAddModal()">취소</button>
+      <button class="btn primary" onclick="submitAddItem()">추가</button>
+    </div>
+  </div>
+</div>
 <footer><div class="wrap">레오플 간편견적 1단계 구조 데모 · 전체 52개 항목/단가는 현재 운영 소스에서 추출한 실제 값</div></footer>
 <script>
 // 레오플 견적 전체 항목 — 현재 운영 소스에서 추출
@@ -287,22 +269,24 @@ var RATES = [
  {id:"mgmt",label:"일반관리비·이윤",desc:"직접공사비 × %",val:8,suf:"%"},
  {id:"vat",label:"부가세",desc:"공급가액 × %",val:10,suf:"%"},
 ];
-let USE_API=false; const sel={}; let area=20; const openSecs=new Set();
+let USE_API=false; const sel={}; let area=20;
 const won=n=>Math.round(n).toLocaleString('ko-KR');
 const rate=id=>RATES.find(r=>r.id===id).val;
 function findItem(id){for(const s of SECTIONS)for(const it of s.items)if(it.id===id)return it;}
 const api=(u,m,b)=>fetch(u,{method:m,headers:{'content-type':'application/json'},body:b?JSON.stringify(b):undefined}).then(r=>r.json());
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+const visibleOptions=it=>(it.options||[]).map((o,i)=>({...o,_i:i})).filter(o=>o._i===0||String(o.label||"").trim()||Number(o.unit||0));
 
 function amountOf(it){
   const v=sel[it.id];
   if(it.mode==="area"){
-    if(it.ctrl==="select"){const o=it.options[v||0];return Math.round(area*(o?o.unit:0));}
+    if(it.ctrl==="select"){const o=it.options[v||0];return Math.round(area*(o?Number(o.unit)||0:0));}
     if(v){let a=area*it.unit;if(it.addflat)a+=it.addflat;return Math.round(a);}return 0;}
-  if(it.mode==="flat"){if(it.ctrl==="select"){const o=it.options[v||0];return o?o.unit:0;}return v?it.unit:0;}
+  if(it.mode==="flat"){if(it.ctrl==="select"){const o=it.options[v||0];return o?Number(o.unit)||0:0;}return v?it.unit:0;}
   if(it.mode==="count"){return Math.round((v||0)*it.unit);}
-  if(it.mode==="unitcount"){const t=v&&v.t!=null?it.options[v.t]:null;const c=v?v.c||0:0;return t?Math.round(t.unit*c):0;}
+  if(it.mode==="unitcount"){const t=v&&v.t!=null?it.options[v.t]:null;const c=v?v.c||0:0;return t?Math.round((Number(t.unit)||0)*c):0;}
   if(it.mode==="areainput"){const a=v&&v.a?parseFloat(v.a)||0:0;
-    if(it.ctrl==="areaselect"){const o=v&&v.t!=null?it.options[v.t]:null;return o?Math.round(a*o.unit):0;}return Math.round(a*it.unit);}
+    if(it.ctrl==="areaselect"){const o=v&&v.t!=null?it.options[v.t]:null;return o?Math.round(a*(Number(o.unit)||0)):0;}return Math.round(a*it.unit);}
   return 0;
 }
 function calc(){let d=0;for(const s of SECTIONS)for(const it of s.items)d+=amountOf(it);
@@ -312,29 +296,26 @@ function calc(){let d=0;for(const s of SECTIONS)for(const it of s.items)d+=amoun
 
 function renderEstimate(){
   let h=`<div class="card"><div class="area-row"><label for="area">건축 평수</label>
-    <input id="area" type="number" min="0" value="${area||''}" oninput="onArea(this.value)" onchange="commitArea()"><span class="u">평</span></div></div>`;
+    <input id="area" type="number" min="0" value="${area}" oninput="onArea(this.value)"><span class="u">평</span></div></div>`;
   for(const s of SECTIONS){const pk=s.pick==="one"?"택1":"개별";
-    let secSum=0;for(const it of s.items)secSum+=amountOf(it);
-    const isOpen=openSecs.has(s.group);
-    const sumHtml=secSum>0?`<span class="sec-sum">${won(secSum)}만</span>`:"";
-    h+=`<div class="card ${isOpen?"open":""}"><h2 onclick="toggleSec('${s.group}')"><span class="caret">▶</span><span class="no">${s.no}</span>${s.name}<span class="right">${sumHtml}<span class="pick">${pk}</span></span></h2><div class="body">`;
+    h+=`<div class="card"><h2><span class="no">${s.no}</span>${s.name}<span class="pick">${pk}</span></h2><div class="body">`;
     for(const it of s.items){const amt=amountOf(it),off=amt>0?"":"off";
       const uText=it.mode==="area"?`평당 ${it.unit}만`:it.mode==="count"?`${it.unit}만/${it.cu||"개"}`:it.mode==="flat"&&it.ctrl==="check"?`정액 ${it.unit}만`:"";
       h+=`<div class="opt ${off}">`;
       if(it.ctrl==="radio")h+=`<input type="radio" name="${s.group}" ${sel[it.id]?"checked":""} onchange="pickRadio('${s.group}','${it.id}')"><span class="name">${it.name}</span><span class="unit">${uText}</span>`;
       else if(it.ctrl==="check")h+=`<input type="checkbox" ${sel[it.id]?"checked":""} onchange="toggle('${it.id}',this.checked)"><span class="name">${it.name}</span><span class="unit">${uText}</span>`;
-      else if(it.ctrl==="select"){const c=sel[it.id]||0,o=it.options.map((o,i)=>`<option value="${i}" ${i==c?"selected":""}>${o.label}${o.unit?` (${o.unit}만)`:""}</option>`).join("");
+      else if(it.ctrl==="select"){const c=sel[it.id]||0,o=visibleOptions(it).map(o=>`<option value="${o._i}" ${o._i==c?"selected":""}>${esc(o.label)||"선택지"}${o.unit?` (${esc(o.unit)}만)`:""}</option>`).join("");
         h+=`<span class="name">${it.name}</span><select onchange="pickSelect('${it.id}',this.value)">${o}</select>`;}
       else if(it.ctrl==="count"){const c=sel[it.id]||0;let o="";for(let i=0;i<=it.maxc;i++)o+=`<option value="${i}" ${i==c?"selected":""}>${i}${it.cu||"개"}</option>`;
         h+=`<span class="name">${it.name}</span><span class="unit">${uText}</span><select onchange="pickCount('${it.id}',this.value)">${o}</select>`;}
       else if(it.ctrl==="unitcount"){const v=sel[it.id]||{};
-        const t=it.options.map((o,i)=>`<option value="${i}" ${v.t==i?"selected":""}>${o.label} (${o.unit}만)</option>`).join("");
+        const t=visibleOptions(it).map(o=>`<option value="${o._i}" ${v.t==o._i?"selected":""}>${esc(o.label)||"선택지"} (${esc(o.unit)}만)</option>`).join("");
         let c=`<option value="0">0개</option>`;for(let i=1;i<=it.maxc;i++)c+=`<option value="${i}" ${v.c==i?"selected":""}>${i}개</option>`;
         h+=`<span class="name">${it.name}</span><select onchange="pickUC('${it.id}','t',this.value)"><option value="">종류</option>${t}</select><select onchange="pickUC('${it.id}','c',this.value)">${c}</select>`;}
       else if(it.ctrl==="areainput"){const v=sel[it.id]||{};
         h+=`<span class="name">${it.name}</span><input class="numin" type="number" min="0" placeholder="평" value="${v.a||""}" oninput="pickAI('${it.id}','a',this.value)"><span class="unit">×${it.unit}만</span>`;}
       else if(it.ctrl==="areaselect"){const v=sel[it.id]||{};
-        const t=`<option value="">종류</option>`+it.options.map((o,i)=>`<option value="${i}" ${v.t==i?"selected":""}>${o.label} (${o.unit}만)</option>`).join("");
+        const t=`<option value="">종류</option>`+visibleOptions(it).map(o=>`<option value="${o._i}" ${v.t==o._i?"selected":""}>${esc(o.label)||"선택지"} (${esc(o.unit)}만)</option>`).join("");
         h+=`<span class="name">${it.name}</span><input class="numin" type="number" min="0" placeholder="평" value="${v.a||""}" oninput="pickAI('${it.id}','a',this.value)"><select onchange="pickAI('${it.id}','t',this.value)">${t}</select>`;}
       h+=`<span class="amt">${amt?won(amt):"—"}</span></div>`;}
     h+=`</div></div>`;}
@@ -349,17 +330,7 @@ function renderSummary(){const c=calc();document.getElementById('total').textCon
     <div class="srow sub"><span class="k">공급가액</span><span class="v">${won(c.p5)}</span></div>
     <div class="srow"><span class="k">부가세 <em>${rate('vat')}%</em></span><span class="v">${won(c.p6)}</span></div>`;}
 function refresh(){renderEstimate();renderSummary();}
-function onArea(v){area=parseFloat(v)||0;renderSummary();}
-function commitArea(){renderEstimate();}
-function resetEstimate(){
-  if(!confirm("선택한 항목과 입력 내용을 모두 초기화할까요?"))return;
-  for(const k in sel)delete sel[k];
-  area=0;
-  ['cName','cPhone','cEmail'].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
-  refresh();
-  const a=document.getElementById('area');if(a)a.value="";
-}
-function toggleSec(g){if(openSecs.has(g))openSecs.delete(g);else openSecs.add(g);renderEstimate();}
+function onArea(v){area=parseFloat(v)||0;renderEstimate();const a=document.getElementById('area');a.focus();a.setSelectionRange(a.value.length,a.value.length);}
 function pickRadio(g,id){for(const s of SECTIONS)if(s.group===g)for(const it of s.items)delete sel[it.id];sel[id]=true;refresh();}
 function toggle(id,on){if(on)sel[id]=true;else delete sel[id];refresh();}
 function pickSelect(id,i){sel[id]=parseInt(i);refresh();}
@@ -374,14 +345,12 @@ function renderAdmin(){let h="";
       <button class="btn ghost sm add" onclick="addItem('${s.group}')">+ 항목 추가</button></h3>
       <table><thead><tr><th>항목명</th><th>계산</th><th style="text-align:right">단가(만원)</th><th></th></tr></thead><tbody>`;
     for(const it of s.items){const ml={area:"평수×단가",count:"개수×단가",flat:"정액",unitcount:"단가×개수",areainput:"입력평×단가"}[it.mode];
-      const isOpt=it.options&&(it.mode==="area"||it.mode==="flat"||it.mode==="unitcount"||it.mode==="areainput");
-      if(isOpt){
-        it.options.forEach((o,i)=>{if(o.unit===0&&String(o.label).includes("선택"))return;
-          h+=`<tr><td><input class="txt" value="${o.label}" onchange="edOpt('${it.id}',${i},'label',this.value)"> <span class="grp">${it.name}</span></td>
-            <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${o.unit}" onchange="edOpt('${it.id}',${i},'unit',this.value)"></td>
-            <td><button class="optx" title="선택지 삭제" onclick="delOpt('${it.id}',${i})">✕</button></td></tr>`;});
-        h+=`<tr><td colspan="4" style="padding:4px 16px 12px"><button class="addopt" onclick="addOpt('${it.id}')">+ &lsquo;${it.name}&rsquo; 선택지 추가</button>
-          <button class="del" style="margin-left:8px" onclick="delItem('${it.id}')">&lsquo;${it.name}&rsquo; 항목 삭제</button></td></tr>`;
+      if(it.options&&(it.mode==="area"||it.mode==="flat"||it.mode==="unitcount"||it.mode==="areainput")){
+        it.options.forEach((o,i)=>{if(i===0&&Number(o.unit||0)===0&&String(o.label).includes("선택"))return;
+          h+=`<tr><td><input class="txt" value="${esc(o.label)}" onchange="edOpt('${it.id}',${i},'label',this.value)"> <span class="grp">${esc(it.name)}</span></td>
+            <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${Number(o.unit)||0}" onchange="edOpt('${it.id}',${i},'unit',this.value)"></td><td><button class="del" onclick="delOpt('${it.id}',${i})">삭제</button></td></tr>`;});
+        h+=`<tr><td colspan="4"><button class="btn ghost sm" onclick="addOpt('${it.id}')">+ '${esc(it.name)}' 선택지 추가</button>
+          <button class="del" onclick="delItem('${it.id}')">'${esc(it.name)}' 항목 삭제</button></td></tr>`;
       } else {
         h+=`<tr><td><input class="txt" value="${it.name}" onchange="edItem('${it.id}','name',this.value)"></td>
           <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${it.unit}" onchange="edItem('${it.id}','unit',this.value)"></td>
@@ -394,73 +363,76 @@ function renderAdmin(){let h="";
 function flash(){const m=document.getElementById('savedMsg');m.classList.add('show');clearTimeout(m._t);m._t=setTimeout(()=>m.classList.remove('show'),1100);}
 function edItem(id,k,v){const it=findItem(id);it[k]=(k==='unit')?(parseFloat(v)||0):v;flash();
   if(USE_API)api('/api/item','PUT',{id,[k]:it[k]});}
-function edOpt(id,i,k,v){const it=findItem(id);it.options[i][k]=(k==='unit')?(parseFloat(v)||0):v;flash();
-  if(USE_API)api('/api/item','PUT',{id,options:it.options});}
+function edOpt(id,i,k,v){const it=findItem(id);it.options[i][k]=(k==='unit')?(parseFloat(v)||0):v;refresh();flash();
+  saveOptions(it);}
+async function saveOptions(it){
+  if(USE_API)await api('/api/item','PUT',{id:it.id,options:it.options});
+}
+async function addOpt(id){
+  const it=findItem(id);if(!it)return;
+  const label=prompt("선택지 이름:");if(!label||!label.trim())return;
+  const unit=parseFloat(prompt("단가(만원):","0"))||0;
+  it.options=it.options||[];
+  it.options.push({label:label.trim(),unit});
+  await saveOptions(it);
+  renderAdmin();refresh();flash();
+}
+async function delOpt(id,i){
+  const it=findItem(id);if(!it||!it.options||!it.options[i])return;
+  if(!confirm(`'${it.options[i].label||"선택지"}' 선택지를 삭제할까요?`))return;
+  it.options.splice(i,1);
+  if(sel[id]===i)delete sel[id];
+  else if(typeof sel[id]==="number"&&sel[id]>i)sel[id]-=1;
+  await saveOptions(it);
+  renderAdmin();refresh();flash();
+}
 function edRate(id,v){const r=RATES.find(x=>x.id===id);r.val=parseFloat(v)||0;flash();
   if(USE_API)api('/api/rate','PUT',{id,val:r.val});}
 async function delItem(id){if(!confirm("이 항목을 삭제할까요?"))return;
   if(USE_API){await fetch('/api/item?id='+encodeURIComponent(id),{method:'DELETE'});await reloadCatalog();}
   else{for(const s of SECTIONS){const i=s.items.findIndex(x=>x.id===id);if(i>=0){s.items.splice(i,1);break;}}}
   delete sel[id];renderAdmin();flash();}
-// 기존 드롭다운 항목에 선택지 추가/삭제
-function addOpt(id){const it=findItem(id);it.options=it.options||[];it.options.push({label:"새 선택지",unit:0});
-  if(USE_API)api('/api/item','PUT',{id,options:it.options});renderAdmin();flash();}
-function delOpt(id,i){const it=findItem(id);if(!confirm("이 선택지를 삭제할까요?"))return;
-  it.options.splice(i,1);if(USE_API)api('/api/item','PUT',{id,options:it.options});renderAdmin();flash();}
-
-// 항목 추가 모달
-let amGroup=null,amPick="free",amOpts=[];
-function addItem(group){const s=SECTIONS.find(x=>x.group===group);amGroup=group;amPick=s.pick;
-  document.getElementById('amSec').textContent=s.no+". "+s.name;
-  document.getElementById('amName').value="";document.getElementById('amCode').value="";
-  document.getElementById('amType').value="areaCheck";document.getElementById('amUnit').value="0";
-  document.getElementById('amMaxc').value="20";document.getElementById('amCu').value="개";
-  amOpts=[{label:"",unit:0},{label:"",unit:0}];amRenderOpts();amTypeChange();
-  document.getElementById('addModal').classList.add('on');}
-function closeAdd(){document.getElementById('addModal').classList.remove('on');}
-function amTypeChange(){const t=document.getElementById('amType').value;
-  const show=(id,b)=>document.getElementById(id).style.display=b?"":"none";
-  const isOpt=["areaSelect","flatSelect","areaInputSelect","unitcount"].includes(t);
-  const isCount=["count","unitcount"].includes(t);
-  show('amUnitWrap',!isOpt);show('amOptWrap',isOpt);show('amCountWrap',isCount);}
-function amRenderOpts(){document.getElementById('amOptList').innerHTML=amOpts.map((o,i)=>
-  `<div class="optrow"><input class="l" placeholder="선택지 이름 (예: 박공)" value="${o.label}" oninput="amOpts[${i}].label=this.value">
-   <input class="u" type="number" step="0.01" placeholder="단가" value="${o.unit}" oninput="amOpts[${i}].unit=parseFloat(this.value)||0">
-   <button class="optx" onclick="amDelOptRow(${i})">✕</button></div>`).join("");}
-function amAddOptRow(){amOpts.push({label:"",unit:0});amRenderOpts();}
-function amDelOptRow(i){amOpts.splice(i,1);amRenderOpts();}
-async function submitAdd(){
-  const name=document.getElementById('amName').value.trim();
-  if(!name){alert("항목 이름을 입력하세요");return;}
-  const code=document.getElementById('amCode').value.trim()||"custom";
-  const t=document.getElementById('amType').value;
-  const unit=parseFloat(document.getElementById('amUnit').value)||0;
-  const maxc=parseInt(document.getElementById('amMaxc').value)||20;
-  const cu=document.getElementById('amCu').value.trim()||"개";
-  const opts=amOpts.filter(o=>o.label.trim()!=="").map(o=>({label:o.label.trim(),unit:parseFloat(o.unit)||0}));
-  let it={id:"x"+Date.now(),code,name};
-  if(t==="areaCheck"){it.ctrl=(amPick==="one")?"radio":"check";it.mode="area";it.unit=unit;}
-  else if(t==="flatCheck"){it.ctrl="check";it.mode="flat";it.unit=unit;}
-  else if(t==="areaInput"){it.ctrl="areainput";it.mode="areainput";it.unit=unit;}
-  else if(t==="count"){it.ctrl="count";it.mode="count";it.unit=unit;it.maxc=maxc;it.cu=cu;}
-  else if(t==="areaSelect"||t==="flatSelect"){
-    if(!opts.length){alert("선택지를 하나 이상 입력하세요");return;}
-    it.ctrl="select";it.mode=(t==="areaSelect")?"area":"flat";it.options=[{label:"선택 안 함",unit:0},...opts];}
-  else if(t==="areaInputSelect"){if(!opts.length){alert("선택지를 입력하세요");return;}it.ctrl="areaselect";it.mode="areainput";it.options=opts;}
-  else if(t==="unitcount"){if(!opts.length){alert("종류를 하나 이상 입력하세요");return;}it.ctrl="unitcount";it.mode="unitcount";it.options=opts;it.maxc=maxc;}
-  if(USE_API){await api('/api/item','POST',{group:amGroup,...it});await reloadCatalog();}
-  else{SECTIONS.find(x=>x.group===amGroup).items.push(it);}
-  closeAdd();renderAdmin();flash();}
+let addGroup=null;
+function addItem(group){
+  addGroup=group;
+  const s=SECTIONS.find(x=>x.group===group);
+  document.getElementById('addSectionName').textContent=s?s.no+". "+s.name:group;
+  document.getElementById('addName').value="";
+  document.getElementById('addCode').value="";
+  document.getElementById('addMode').value="area";
+  document.getElementById('addUnit').value="0";
+  document.getElementById('addModal').classList.add('on');
+  document.getElementById('addModal').setAttribute('aria-hidden','false');
+  setTimeout(()=>document.getElementById('addName').focus(),0);
+}
+function closeAddModal(){
+  document.getElementById('addModal').classList.remove('on');
+  document.getElementById('addModal').setAttribute('aria-hidden','true');
+  addGroup=null;
+}
+async function submitAddItem(){
+  if(!addGroup)return;
+  const name=document.getElementById('addName').value.trim();
+  const code=document.getElementById('addCode').value.trim()||'custom';
+  const mode=document.getElementById('addMode').value;
+  const unit=parseFloat(document.getElementById('addUnit').value)||0;
+  if(!name){alert("항목 이름을 입력해주세요.");document.getElementById('addName').focus();return;}
+  const ctrl=mode==="count"?"count":"check";
+  const item={group:addGroup,code,name,ctrl,mode,unit,maxc:mode==="count"?20:null};
+  if(USE_API){await api('/api/item','POST',item);await reloadCatalog();}
+  else{const s=SECTIONS.find(x=>x.group===addGroup);s.items.push({id:"x"+Date.now(),...item});}
+  closeAddModal();renderAdmin();refresh();flash();
+}
 
 let memStore=[];
 function lsGet(){try{return JSON.parse(localStorage.getItem('leople_subs')||'[]');}catch(e){return memStore;}}
 function lsSet(a){try{localStorage.setItem('leople_subs',JSON.stringify(a));}catch(e){memStore=a;}}
 function collectPicks(){const picks=[];for(const s of SECTIONS)for(const it of s.items){const amt=amountOf(it);if(amt>0){
   let d=it.name;const v=sel[it.id];
-  if(it.ctrl==="select")d=it.name+" · "+it.options[v||0].label;
+  if(it.ctrl==="select")d=it.name+" · "+((it.options[v||0]&&it.options[v||0].label)||"선택지");
   else if(it.mode==="count")d=it.name+" "+v+(it.cu||"개");
   else if(it.ctrl==="unitcount")d=it.name+" "+(it.options[v.t]?it.options[v.t].label:"")+" "+(v.c||0)+"개";
-  else if(it.mode==="areainput")d=it.name+" "+((v&&v.a)||0)+"평"+(it.ctrl==="areaselect"&&v&&v.t!=null?" "+it.options[v.t].label:"");
+  else if(it.mode==="areainput")d=it.name+" "+((v&&v.a)||0)+"평"+(it.ctrl==="areaselect"&&v&&v.t!=null&&it.options[v.t]?" "+it.options[v.t].label:"");
   picks.push({code:it.code,name:d,amount:amt});}}return picks;}
 async function saveSubmission(){
   const name=document.getElementById('cName').value.trim();
@@ -468,83 +440,20 @@ async function saveSubmission(){
   const email=document.getElementById('cEmail').value.trim();
   if(!name){alert("작성자 이름을 입력해주세요");return;}
   if(area<=0){alert("평수를 입력해주세요");return;}
-  const c=calc();const rec={name,phone,email,area,facade_type:null,selections:collectPicks(),total:c.p7,
-    breakdown:{p1:c.p1,p2:c.p2,p3:c.p3,p4:c.p4,p5:c.p5,p6:c.p6,p7:c.p7},
-    rates:{ins:rate('ins'),base:rate('base'),mgmt:rate('mgmt'),vat:rate('vat')}};
+  const c=calc();const rec={name,phone,email,area,facade_type:null,selections:collectPicks(),total:c.p7};
   if(USE_API){await api('/api/submissions','POST',rec);}
   else{const subs=lsGet();subs.unshift({id:Date.now(),at:new Date().toLocaleString('ko-KR'),...rec});lsSet(subs);}
   document.getElementById('cName').value="";document.getElementById('cPhone').value="";document.getElementById('cEmail').value="";
   alert("견적이 저장되었습니다. '저장된 견적' 탭에서 확인하세요.");}
 async function getSubs(){if(USE_API){try{return await api('/api/submissions','GET');}catch(e){return [];}}return lsGet();}
-let SUBS_CACHE=[];
-async function renderSubs(){const subs=await getSubs();SUBS_CACHE=subs;const box=document.getElementById('subBuild');
+async function renderSubs(){const subs=await getSubs();const box=document.getElementById('subBuild');
   if(!subs.length){box.innerHTML=`<div class="empty">아직 저장된 견적이 없습니다. 고객 견적 탭에서 정보를 입력하고 "이 견적 저장하기"를 눌러보세요.</div>`;return;}
-  box.innerHTML=`<div style="margin:0 0 14px"><button class="btn teal" onclick="exportAll()">전체 목록 엑셀 다운로드 (${subs.length}건)</button></div>
-    <div class="sub-list">`+subs.map(su=>`<div class="sub-item">
+  box.innerHTML=`<div class="sub-list">`+subs.map(su=>`<div class="sub-item">
     <div class="sh"><div><span class="who">${su.name}</span> <span class="when">· ${su.area}평 · ${su.at}</span><div class="when">${su.phone||""} ${su.email||""}</div></div>
       <div class="tot">${won(su.total)} <span style="font-size:12px;font-weight:500">만원</span></div></div>
     <div class="sel">${su.selections.map(p=>`<b>${p.name}</b> <span style="color:#aaa">[${p.code}]</span> ${won(p.amount)}만`).join(" · ")}</div>
-    <div style="margin-top:10px;display:flex;gap:8px"><button class="btn teal sm" onclick="exportOne(${su.id})">이 견적 엑셀 다운로드</button><button class="del" onclick="delSub(${su.id})">삭제</button></div></div>`).join("")+`</div>`;}
+    <div style="margin-top:8px"><button class="del" onclick="delSub(${su.id})">삭제</button></div></div>`).join("")+`</div>`;}
 async function delSub(id){if(USE_API){await fetch('/api/submissions?id='+id,{method:'DELETE'});}else{lsSet(lsGet().filter(s=>s.id!==id));}renderSubs();}
-
-// 합계 분해 — 저장된 값 있으면 사용, 없으면 선택금액 합 + 현재 요율로 재계산
-function breakdownOf(su){
-  if(su.breakdown&&su.breakdown.p7!=null)return su.breakdown;
-  const p1=Math.round((su.selections||[]).reduce((a,p)=>a+(p.amount||0),0));
-  const R=su.rates||{ins:rate('ins'),base:rate('base'),mgmt:rate('mgmt'),vat:rate('vat')};
-  const p2=Math.round(p1/100*R.ins),p3=Math.round(su.area*R.base),p4=Math.round(p1/100*R.mgmt);
-  const p5=p1+p2+p3+p4,p6=Math.floor(p5/100*R.vat);return {p1,p2,p3,p4,p5,p6,p7:p5+p6};
-}
-// 시트명 안전화 (엑셀 31자 제한, 금지문자 제거, 중복 시 번호)
-function sheetName(base,used){
-  let n=String(base||'견적').replace(/[\\\/?*\[\]:]/g,' ').trim().slice(0,28)||'견적';
-  let name=n,i=2;while(used.has(name)){const suf='('+i+')';name=n.slice(0,28-suf.length)+suf;i++;}
-  used.add(name);return name;
-}
-// 한 사람의 상세 시트(aoa) 생성
-function detailAoa(su){
-  const b=breakdownOf(su);const R=su.rates||{ins:rate('ins'),base:rate('base'),mgmt:rate('mgmt'),vat:rate('vat')};
-  const aoa=[['레오플 간편견적서'],[],
-    ['작성일',su.at||''],['작성자',su.name||''],['연락처',su.phone||''],['이메일',su.email||''],
-    ['건축 평수',su.area],[],['공정 / 항목','코드','금액(만원)']];
-  (su.selections||[]).forEach(p=>aoa.push([p.name,p.code,p.amount]));
-  aoa.push([]);
-  aoa.push(['직접공사비','',b.p1]);
-  aoa.push([`보험료 등 (${R.ins}%)`,'',b.p2]);
-  aoa.push([`평당 기본경비 (${R.base}만/평)`,'',b.p3]);
-  aoa.push([`일반관리비·이윤 (${R.mgmt}%)`,'',b.p4]);
-  aoa.push(['공급가액','',b.p5]);
-  aoa.push([`부가세 (${R.vat}%)`,'',b.p6]);
-  aoa.push(['총 견적금액','',b.p7]);
-  return aoa;
-}
-// 건별 상세 엑셀(파일 1개)
-function exportOne(id){
-  const su=SUBS_CACHE.find(s=>String(s.id)===String(id));if(!su)return;
-  const ws=XLSX.utils.aoa_to_sheet(detailAoa(su));
-  ws['!cols']=[{wch:34},{wch:16},{wch:14}];
-  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'견적서');
-  XLSX.writeFile(wb,`견적_${safeName(su.name)}_${su.area}평.xlsx`);
-}
-// 전체 목록 엑셀: 전체요약 시트 + 고객별 상세 시트
-function exportAll(){
-  if(!SUBS_CACHE.length)return;
-  const wb=XLSX.utils.book_new();const used=new Set();
-  // 1) 전체요약 시트
-  const head=['작성일','작성자','연락처','이메일','평수','직접공사비','보험료등','평당경비','관리비이윤','공급가액','부가세','총액(만원)'];
-  const rows=SUBS_CACHE.map(su=>{const b=breakdownOf(su);
-    return [su.at||'',su.name||'',su.phone||'',su.email||'',su.area,b.p1,b.p2,b.p3,b.p4,b.p5,b.p6,b.p7];});
-  const sum=XLSX.utils.aoa_to_sheet([head,...rows]);
-  sum['!cols']=[{wch:20},{wch:12},{wch:15},{wch:22},{wch:7},{wch:11},{wch:10},{wch:10},{wch:11},{wch:11},{wch:9},{wch:12}];
-  used.add('전체요약');XLSX.utils.book_append_sheet(wb,sum,'전체요약');
-  // 2) 고객별 상세 시트
-  SUBS_CACHE.forEach(su=>{
-    const ws=XLSX.utils.aoa_to_sheet(detailAoa(su));ws['!cols']=[{wch:34},{wch:16},{wch:14}];
-    XLSX.utils.book_append_sheet(wb,ws,sheetName(su.name,used));
-  });
-  const d=new Date();const ymd=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
-  XLSX.writeFile(wb,`레오플_견적목록_${ymd}.xlsx`);
-}
 
 function showTab(w){const m={est:'p-est',adm:'p-adm',sub:'p-sub'};
   for(const k in m)document.getElementById(m[k]).classList.toggle('on',k===w);
