@@ -32,7 +32,7 @@ main{padding:24px 0 80px}.panel{display:none}.panel.on{display:block}
 .card h2 .no{font-size:11px;color:#fff;background:var(--indigo);width:20px;height:20px;display:grid;place-items:center;border-radius:3px}
 .card h2 .pick{font-size:10px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:100px;padding:3px 9px;text-transform:none}
 .card h2{cursor:pointer;user-select:none}
-.card h2 .caret{font-size:10px;color:var(--muted);transition:transform .15s;display:inline-block;width:12px}
+.card h2 .caret{font-size:16px;font-weight:700;color:var(--indigo);transition:transform .15s;display:inline-block;width:20px;text-align:center}
 .card.open h2 .caret{transform:rotate(90deg)}
 .card .body{display:none}
 .card.open .body{display:block}
@@ -271,7 +271,7 @@ function renderEstimate(){
     let secSum=0;for(const it of s.items)secSum+=amountOf(it);
     const isOpen=openSecs.has(s.group);
     const sumHtml=secSum>0?`<span class="sec-sum">${won(secSum)}만</span>`:"";
-    h+=`<div class="card ${isOpen?"open":""}"><h2 onclick="toggleSec('${s.group}')"><span class="caret">▸</span><span class="no">${s.no}</span>${s.name}<span class="right">${sumHtml}<span class="pick">${pk}</span></span></h2><div class="body">`;
+    h+=`<div class="card ${isOpen?"open":""}"><h2 onclick="toggleSec('${s.group}')"><span class="caret">▶</span><span class="no">${s.no}</span>${s.name}<span class="right">${sumHtml}<span class="pick">${pk}</span></span></h2><div class="body">`;
     for(const it of s.items){const amt=amountOf(it),off=amt>0?"":"off";
       const uText=it.mode==="area"?`평당 ${it.unit}만`:it.mode==="count"?`${it.unit}만/${it.cu||"개"}`:it.mode==="flat"&&it.ctrl==="check"?`정액 ${it.unit}만`:"";
       h+=`<div class="opt ${off}">`;
