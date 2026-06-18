@@ -6,10 +6,15 @@ export async function onRequestPost({ request, env }) {  // 추가
     const b = await request.json();
     const sec = await env.DB.prepare("SELECT id FROM sections WHERE grp=?").bind(b.group).first();
     if(!sec) return J({error:'섹션 없음'},400);
-    const id = 'x'+Date.now();
+    const id = b.id || ('x'+Date.now());
     await env.DB.prepare(
-      "INSERT INTO items(id,section_id,code,name,ctrl,mode,unit,sort,active) VALUES(?,?,?,?,?,?,?,?,1)"
-    ).bind(id, sec.id, 'custom', b.name, 'check', 'area', b.unit||0, 999).run();
+      "INSERT INTO items(id,section_id,code,name,ctrl,mode,unit,addflat,maxc,cu,options,sort,active) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,1)"
+    ).bind(
+      id, sec.id, b.code||'custom', b.name, b.ctrl||'check', b.mode||'area',
+      (b.unit!=null?b.unit:null), (b.addflat!=null?b.addflat:null),
+      (b.maxc!=null?b.maxc:null), (b.cu!=null?b.cu:null),
+      (b.options?JSON.stringify(b.options):null), 999
+    ).run();
     return J({ok:true, id});
   } catch(e){ return J({error:String(e)},500); }
 }
