@@ -188,103 +188,106 @@ footer{border-top:1px solid var(--line);padding:18px 0;font-size:12px;color:var(
 // mode: area(평수×단가) | count(개수×단가) | flat(정액) | unitcount(단가×개수) | areainput(입력평×단가)
 var SECTIONS = [
  {no:1,name:"골조공사",group:"frame",pick:"one",items:[
-   {id:"f_wood",code:"frame",name:"경량목구조",ctrl:"radio",mode:"area",unit:140},
-   {id:"f_steel",code:"frame",name:"스틸모듈러구조",ctrl:"radio",mode:"area",unit:140},
+   {id:"f_modular",code:"frame",name:"모듈러공법 (경량철골)",ctrl:"radio",mode:"area",unit:80},
+   {id:"f_steel",code:"frame",name:"철골공법 (H빔)",ctrl:"radio",mode:"area",unit:120},
    {id:"f_rc",code:"frame",name:"철근콘크리트조",ctrl:"radio",mode:"area",unit:200},
-   {id:"f_caulk",code:"frame_caulk",name:"골조기밀코킹 (목구조/모듈러만)",ctrl:"check",mode:"area",unit:6},
  ]},
  {no:2,name:"외장마감",group:"ext",pick:"one",items:[
-   {id:"e_summer",code:"ext",name:"서머사이딩",ctrl:"radio",mode:"area",unit:55},
-   {id:"e_stuco",code:"ext",name:"60T EPS 위 스타코플랙스",ctrl:"radio",mode:"area",unit:65},
-   {id:"e_brick",code:"ext",name:"점토벽돌 (기본사이즈)",ctrl:"radio",mode:"area",unit:70},
-   {id:"e_ceramic",code:"ext",name:"세라믹사이딩&세라믹타일",ctrl:"radio",mode:"area",unit:100},
+   {id:"e_metal",code:"ext",name:"메탈사이딩",ctrl:"radio",mode:"area",unit:29},
+   {id:"e_stuco",code:"ext",name:"60T EPS 위 스타코플랙스 (비계공사별도)",ctrl:"radio",mode:"area",unit:46},
+   {id:"e_brick",code:"ext",name:"점토벽돌 (기본)",ctrl:"radio",mode:"area",unit:65},
+   {id:"e_eps150",code:"ext",name:"준불연 EPS샌드위치판넬 150T",ctrl:"radio",mode:"area",unit:50},
+   {id:"e_ceramic",code:"ext",name:"세라믹사이딩 (하지작업포함)",ctrl:"radio",mode:"area",unit:120},
+   {id:"e_wallpanel",code:"ext",name:"25T 불연 복합 wall panel",ctrl:"radio",mode:"area",unit:60},
+   {id:"e_stone",code:"ext",name:"석공사 (돌붙임)",ctrl:"radio",mode:"area",unit:65},
  ]},
  {no:3,name:"지붕공사",group:"roof",pick:"free",items:[
-   {id:"r_shingle",code:"roof",name:"이중그림자 슁글",ctrl:"select",mode:"area",options:[
-     {label:"선택 안 함",unit:0},{label:"단면경사",unit:13.2},{label:"박공",unit:26.4}]},
+   {id:"r_shingle",code:"roof",name:"이중그림자 슁글 (방수쉬트포함)",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"단면 경사지붕",unit:13.5},{label:"박공지붕",unit:36}]},
    {id:"r_zinc",code:"roof",name:"리얼징크",ctrl:"select",mode:"area",options:[
-     {label:"선택 안 함",unit:0},{label:"단면경사",unit:39.6},{label:"박공",unit:90}]},
-   {id:"r_tile",code:"roof",name:"점토기와",ctrl:"select",mode:"area",options:[
-     {label:"선택 안 함",unit:0},{label:"단면경사+일반기와",unit:55},{label:"박공+일반기와",unit:110},
-     {label:"단면경사+수입기와",unit:66},{label:"박공+수입기와",unit:132}]},
+     {label:"선택 안 함",unit:0},{label:"단면 경사지붕",unit:45},{label:"박공지붕",unit:55}]},
+   {id:"r_eps220",code:"roof",name:"준불연 EPS샌드위치판넬 220T",ctrl:"check",mode:"area",unit:82.5},
  ]},
  {no:4,name:"창호공사",group:"win",pick:"free",items:[
-   {id:"w_lg",code:"window",name:"LG창호",ctrl:"check",mode:"area",unit:35},
-   {id:"w_us",code:"window",name:"미국식 시스템창호",ctrl:"check",mode:"area",unit:50},
-   {id:"w_de",code:"window",name:"독일식 시스템창호",ctrl:"check",mode:"area",unit:70},
-   {id:"w_eagon",code:"window",name:"이건알루미늄 시스템창호",ctrl:"check",mode:"area",unit:120},
+   {id:"w_pvc",code:"window",name:"PVC 2중 창호",ctrl:"check",mode:"area",unit:50},
+   {id:"w_al",code:"window",name:"알루미늄시스템창호",ctrl:"check",mode:"area",unit:120},
+   {id:"w_de",code:"window",name:"독일식 PVC 시스템창호",ctrl:"check",mode:"area",unit:95},
    {id:"w_sky",code:"window_sky",name:"천창",ctrl:"unitcount",mode:"unitcount",maxc:20,options:[
      {label:"고정창",unit:100},{label:"열리는 창",unit:140}]},
+   {id:"w_flashing",code:"window_flashing",name:"창호 후레슁",ctrl:"check",mode:"area",unit:16},
    {id:"w_door",code:"entrance",name:"현관문",ctrl:"select",mode:"flat",options:[
-     {label:"선택 안 함",unit:0},{label:"독일식 시스템현관문",unit:180},{label:"도어코코리아 현관문",unit:110}]},
-   {id:"w_store",code:"storage_door",name:"창고문 (방화문기본)",ctrl:"count",mode:"count",unit:25,maxc:20},
+     {label:"선택 안 함",unit:0},{label:"독일식시스템현관문",unit:350},{label:"도어코코리아현관문",unit:150}]},
+   {id:"w_store",code:"storage_door",name:"창고문 (방화문기본)",ctrl:"count",mode:"count",unit:35,maxc:20},
+   {id:"w_airseal",code:"window_airseal",name:"기밀시공 (저팽창우레탄폼, 팽창테이프 시공)",ctrl:"check",mode:"area",unit:10},
  ]},
  {no:5,name:"단열공사",group:"ins",pick:"free",items:[
-   {id:"i_mat",code:"insulation",name:"단열재",ctrl:"select",mode:"area",options:[
-     {label:"선택 안 함",unit:0},{label:"인슐레이션",unit:14},{label:"우레탄 폼",unit:30}]},
+   {id:"i_mat",code:"insulation",name:"벽체 & 천정 단열재",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"무기질유리섬유",unit:15},{label:"EPS준불연단열재",unit:55},{label:"우레탄 폼",unit:36}]},
  ]},
  {no:6,name:"전기 · 설비",group:"mep",pick:"free",items:[
-   {id:"m_elec",code:"electric",name:"전기",ctrl:"check",mode:"area",unit:17},
-   {id:"m_plumb",code:"plumbing",name:"설비 (난방/배관/소방)",ctrl:"check",mode:"area",unit:25},
+   {id:"m_elec",code:"electric",name:"전기설비 (전기/통신/소방/기본LED조명)",ctrl:"check",mode:"area",unit:35},
+   {id:"m_plumb",code:"plumbing",name:"배관설비 (난방/배관)",ctrl:"check",mode:"area",unit:35},
  ]},
  {no:7,name:"방수공사",group:"water",pick:"free",items:[
-   {id:"wp",code:"waterproof",name:"방수 (화장실/테라스/베란다)",ctrl:"count",mode:"count",unit:70,maxc:20},
+   {id:"wp",code:"waterproof",name:"방수 (화장실/테라스/베란다)개수",ctrl:"count",mode:"count",unit:100,maxc:20},
  ]},
  {no:8,name:"목공·인테리어",group:"carp",pick:"free",items:[
    {id:"c_mold",code:"molding",name:"몰딩공사",ctrl:"check",mode:"area",unit:9.5},
-   {id:"c_well",code:"int_light",name:"우물천정 등박스 (간접조명)",ctrl:"check",mode:"area",unit:7},
-   {id:"c_art",code:"int_light",name:"아트월 등박스 (간접조명)",ctrl:"check",mode:"area",unit:10},
-   {id:"c_ceil",code:"ceiling",name:"천정석고 2P",ctrl:"check",mode:"area",unit:7},
-   {id:"c_wall",code:"wall_board",name:"벽면 석고 / 석고+OSB",ctrl:"select",mode:"area",options:[
-     {label:"선택 안 함",unit:0},{label:"벽면석고 2P",unit:10},{label:"석고+OSB",unit:20}]},
-   {id:"c_luva",code:"luva",name:"내부 미송목재루바",ctrl:"check",mode:"area",unit:45},
-   {id:"c_abs",code:"abs_door",name:"ABS도어 (문+틀+손잡이)",ctrl:"count",mode:"count",unit:25,maxc:20},
+   {id:"c_ceil",code:"ceiling",name:"천정석고 2P",ctrl:"check",mode:"area",unit:8},
+   {id:"c_wall",code:"wall_board",name:"벽면 석고2P",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"벽면석고 2P",unit:9},{label:"OSB 8T+석고 1P",unit:18}]},
+   {id:"c_tex",code:"ceiling_tex",name:"천정텍스",ctrl:"check",mode:"area",unit:7.5},
+   {id:"c_abs",code:"abs_door",name:"ABS도어 (문+틀+손잡이)",ctrl:"count",mode:"count",unit:35,maxc:20},
    {id:"c_pocket",code:"pocket_door",name:"포켓도어",ctrl:"count",mode:"count",unit:55,maxc:20},
-   {id:"c_stair",code:"stair",name:"계단공사",ctrl:"check",mode:"flat",unit:500},
+   {id:"c_luva",code:"luva",name:"목재루바",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"고가",unit:28},{label:"저가",unit:15}]},
+   {id:"c_stair",code:"stair",name:"계단공사",ctrl:"select",mode:"flat",options:[
+     {label:"선택 안 함",unit:0},{label:"고가",unit:750}]},
  ]},
  {no:9,name:"도배 · 도장",group:"surf",pick:"free",items:[
    {id:"p_wall",code:"wallpaper",name:"도배",ctrl:"select",mode:"area",options:[
-     {label:"선택 안 함",unit:0},{label:"전체실크",unit:7},{label:"전체합지",unit:4.55}]},
-   {id:"p_paint",code:"paint",name:"도장",ctrl:"check",mode:"area",unit:15},
+     {label:"선택 안 함",unit:0},{label:"전체실크",unit:9},{label:"전체합지",unit:5.6}]},
+   {id:"p_paint",code:"paint",name:"전체도장",ctrl:"check",mode:"area",unit:18},
  ]},
  {no:10,name:"바닥공사",group:"floor",pick:"free",items:[
-   {id:"fl",code:"floor",name:"마루",ctrl:"select",mode:"area",options:[
-     {label:"선택 안 함",unit:0},{label:"원목마루",unit:40.25},{label:"강마루",unit:12.65},
-     {label:"강화마루 소폭",unit:9.66},{label:"강화마루 광폭",unit:8.97},{label:"데코타일",unit:4.83},
-     {label:"장판 1.8T",unit:4.37},{label:"장판 2.0T",unit:5.175},{label:"장판 4.5T",unit:9.775},
+   {id:"fl",code:"floor",name:"마루 & 장판 & 타일",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"원목마루",unit:34.5},{label:"강마루",unit:12.65},
+     {label:"강화마루",unit:9.66},{label:"강화마루 광폭",unit:7.475},{label:"데코타일",unit:4.83},
+     {label:"장판 1.8T",unit:4.37},{label:"장판 2.0T",unit:5.175},{label:"장판 4.5T",unit:7.015},
      {label:"폴리싱 타일",unit:12},{label:"포세린 타일",unit:15}]},
  ]},
  {no:11,name:"화장실·주방 타일",group:"tile",pick:"free",items:[
    {id:"t_basic",code:"bath_basic",name:"화장실 기본형 (보급형 도기류)",ctrl:"count",mode:"count",unit:300,maxc:4},
-   {id:"t_black",code:"bath_premium",name:"화장실 블랙타입 (고급형)",ctrl:"count",mode:"count",unit:450,maxc:4},
-   {id:"t_kitchen",code:"kitchen_tile",name:"주방타일",ctrl:"count",mode:"count",unit:1.2,maxc:4},
+   {id:"t_black",code:"bath_premium",name:"화장실 블랙타입 (고급형)",ctrl:"count",mode:"count",unit:500,maxc:4},
+   {id:"t_kitchen",code:"kitchen_tile",name:"주방타일",ctrl:"count",mode:"area_count",unit:1.2,maxc:4},
  ]},
  {no:12,name:"가구공사",group:"furn",pick:"free",items:[
    {id:"k_sink",code:"sink",name:"싱크대",ctrl:"select",mode:"flat",options:[
-     {label:"선택 안 함",unit:0},{label:"2.4m ㅡ형",unit:180},{label:"3.2m ㅡ형",unit:240},
-     {label:"2.4m ㄱ형",unit:200},{label:"3.2m ㄱ형",unit:260}]},
+     {label:"선택 안 함",unit:0},{label:"2.4m 기준 ㅡ자형",unit:185},{label:"3.2m 기준 ㅡ자형",unit:245},
+     {label:"2.4m 기준 ㄱ자형",unit:180},{label:"3.2m 기준 ㄱ자형",unit:240}]},
    {id:"k_tall",code:"tall_cabinet",name:"키큰장(600)+냉장고장(1000)",ctrl:"check",mode:"flat",unit:80},
-   {id:"k_island",code:"island",name:"아일랜드식탁",ctrl:"select",mode:"flat",options:[
-     {label:"선택 안 함",unit:0},{label:"4인용",unit:45},{label:"6인용",unit:65}]},
-   {id:"k_uv",code:"uv_cabinet",name:"UV도장 키큰장 (자수)",ctrl:"count",mode:"count",unit:15,maxc:12,cu:"자"},
-   {id:"k_dress",code:"dressroom",name:"드레스룸 시스템장 (자수)",ctrl:"count",mode:"count",unit:10,maxc:20,cu:"자"},
+   {id:"k_shoes",code:"shoe_cabinet",name:"신발장 (300mm = 1자)",ctrl:"count",mode:"count",unit:18,maxc:20,cu:"자"},
  ]},
  {no:13,name:"가설공사",group:"temp",pick:"free",items:[
-   {id:"s_scaffold",code:"scaffold",name:"아시바 (+정액 120만)",ctrl:"check",mode:"area",unit:9,addflat:120},
+   {id:"s_scaffold",code:"scaffold",name:"가설공사",ctrl:"check",mode:"area",unit:25},
  ]},
  {no:14,name:"건축 외 공사",group:"extra",pick:"free",items:[
    {id:"x_attic",code:"attic",name:"다락공사 (평 입력)",ctrl:"areainput",mode:"areainput",unit:220},
    {id:"x_deck",code:"deck",name:"데크공사 (평 입력)",ctrl:"areaselect",mode:"areainput",options:[
-     {label:"미송방부목데크재",unit:50},{label:"하드우드데크재",unit:65}]},
+     {label:"하드우드데크재",unit:60},{label:"인조데크재",unit:60}]},
    {id:"x_water",code:"ext_water",name:"외부수도공사",ctrl:"check",mode:"flat",unit:100},
    {id:"x_temp",code:"temp_power",name:"임시전기 및 한전계량기 인입비",ctrl:"check",mode:"flat",unit:150},
    {id:"x_gas",code:"gas",name:"가스인입비",ctrl:"check",mode:"flat",unit:100},
  ]},
 ];
 var RATES = [
- {id:"ins",label:"보험료 등",desc:"직접공사비 × %",val:3.8,suf:"%"},
- {id:"base",label:"평당 기본경비",desc:"평수 × 단가",val:5.35,suf:"만원/평"},
- {id:"mgmt",label:"일반관리비·이윤",desc:"직접공사비 × %",val:8,suf:"%"},
+ {id:"indirect_labor",label:"간접노무비",desc:"견적비용 × %",val:6,suf:"%"},
+ {id:"industrial_ins",label:"산재보험료",desc:"견적비용 × %",val:1.28,suf:"%"},
+ {id:"employment_ins",label:"고용보험료",desc:"견적비용 × %",val:0.09,suf:"%"},
+ {id:"safety",label:"산업안전보건관리비",desc:"견적비용 × %",val:3.1,suf:"%"},
+ {id:"health_pension",label:"건강·연금 보험료",desc:"견적비용 × %",val:1.3,suf:"%"},
+ {id:"general_mgmt",label:"일반관리비",desc:"견적비용 × %",val:3,suf:"%"},
+ {id:"profit",label:"이윤",desc:"견적비용 × %",val:8,suf:"%"},
  {id:"vat",label:"부가세",desc:"공급가액 × %",val:10,suf:"%"},
 ];
 let USE_API=false; const sel={}; let area=20; const openSecs=new Set();
@@ -292,23 +295,35 @@ const won=n=>Math.round(n).toLocaleString('ko-KR');
 const rate=id=>RATES.find(r=>r.id===id).val;
 function findItem(id){for(const s of SECTIONS)for(const it of s.items)if(it.id===id)return it;}
 const api=(u,m,b)=>fetch(u,{method:m,headers:{'content-type':'application/json'},body:b?JSON.stringify(b):undefined}).then(r=>r.json());
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+const visibleOptions=it=>(it.options||[]).map((o,i)=>({...o,_i:i})).filter(o=>o._i===0||String(o.label||"").trim()||Number(o.unit||0));
 
 function amountOf(it){
   const v=sel[it.id];
   if(it.mode==="area"){
-    if(it.ctrl==="select"){const o=it.options[v||0];return Math.round(area*(o?o.unit:0));}
-    if(v){let a=area*it.unit;if(it.addflat)a+=it.addflat;return Math.round(a);}return 0;}
-  if(it.mode==="flat"){if(it.ctrl==="select"){const o=it.options[v||0];return o?o.unit:0;}return v?it.unit:0;}
-  if(it.mode==="count"){return Math.round((v||0)*it.unit);}
-  if(it.mode==="unitcount"){const t=v&&v.t!=null?it.options[v.t]:null;const c=v?v.c||0:0;return t?Math.round(t.unit*c):0;}
+    if(it.ctrl==="select"){const o=it.options[v||0];return area*(o?Number(o.unit)||0:0);}
+    if(v){let a=area*it.unit;if(it.addflat)a+=it.addflat;return a;}return 0;}
+  if(it.mode==="flat"){if(it.ctrl==="select"){const o=it.options[v||0];return o?Number(o.unit)||0:0;}return v?it.unit:0;}
+  if(it.mode==="count"){return (v||0)*it.unit;}
+  if(it.mode==="area_count"){return (v||0)*area*it.unit;}
+  if(it.mode==="unitcount"){const t=v&&v.t!=null?it.options[v.t]:null;const c=v?v.c||0:0;return t?(Number(t.unit)||0)*c:0;}
   if(it.mode==="areainput"){const a=v&&v.a?parseFloat(v.a)||0:0;
-    if(it.ctrl==="areaselect"){const o=v&&v.t!=null?it.options[v.t]:null;return o?Math.round(a*o.unit):0;}return Math.round(a*it.unit);}
+    if(it.ctrl==="areaselect"){const o=v&&v.t!=null?it.options[v.t]:null;return o?a*(Number(o.unit)||0):0;}return a*it.unit;}
   return 0;
 }
 function calc(){let d=0;for(const s of SECTIONS)for(const it of s.items)d+=amountOf(it);
-  const p1=Math.round(d),p2=Math.round(p1/100*rate('ins')),p3=Math.round(area*rate('base')),
-  p4=Math.round(p1/100*rate('mgmt')),p5=p1+p2+p3+p4,p6=Math.floor(p5/100*rate('vat'));
-  return {p1,p2,p3,p4,p5,p6,p7:p5+p6};}
+  const estimate=d;
+  const indirectLabor=estimate/100*rate('indirect_labor');
+  const industrialIns=estimate/100*rate('industrial_ins');
+  const employmentIns=estimate/100*rate('employment_ins');
+  const safety=estimate/100*rate('safety');
+  const healthPension=estimate/100*rate('health_pension');
+  const generalMgmt=estimate/100*rate('general_mgmt');
+  const profit=estimate/100*rate('profit');
+  const supply=estimate+indirectLabor+industrialIns+employmentIns+safety+healthPension+generalMgmt+profit;
+  const vat=Math.floor(supply/100*rate('vat'));
+  const total=supply+vat;
+  return {p1:estimate,p2:indirectLabor,p3:industrialIns,p4:employmentIns,p5:safety,p6:healthPension,p7:generalMgmt,p8:profit,p9:supply,p10:vat,p11:total};}
 
 function renderEstimate(){
   let h=`<div class="card"><div class="area-row"><label for="area">건축 평수</label>
@@ -319,35 +334,39 @@ function renderEstimate(){
     const sumHtml=secSum>0?`<span class="sec-sum">${won(secSum)}만</span>`:"";
     h+=`<div class="card ${isOpen?"open":""}"><h2 onclick="toggleSec('${s.group}')"><span class="caret">▶</span><span class="no">${s.no}</span>${s.name}<span class="right">${sumHtml}<span class="pick">${pk}</span></span></h2><div class="body">`;
     for(const it of s.items){const amt=amountOf(it),off=amt>0?"":"off";
-      const uText=it.mode==="area"?`평당 ${it.unit}만`:it.mode==="count"?`${it.unit}만/${it.cu||"개"}`:it.mode==="flat"&&it.ctrl==="check"?`정액 ${it.unit}만`:"";
+      const uText=it.mode==="area"?`평당 ${it.unit}만`:it.mode==="count"?`${it.unit}만/${it.cu||"개"}`:it.mode==="area_count"?`${it.unit}만/개·평`:it.mode==="flat"&&it.ctrl==="check"?`정액 ${it.unit}만`:"";
       h+=`<div class="opt ${off}">`;
       if(it.ctrl==="radio")h+=`<input type="radio" name="${s.group}" ${sel[it.id]?"checked":""} onchange="pickRadio('${s.group}','${it.id}')"><span class="name">${it.name}</span><span class="unit">${uText}</span>`;
       else if(it.ctrl==="check")h+=`<input type="checkbox" ${sel[it.id]?"checked":""} onchange="toggle('${it.id}',this.checked)"><span class="name">${it.name}</span><span class="unit">${uText}</span>`;
-      else if(it.ctrl==="select"){const c=sel[it.id]||0,o=it.options.map((o,i)=>`<option value="${i}" ${i==c?"selected":""}>${o.label}${o.unit?` (${o.unit}만)`:""}</option>`).join("");
+      else if(it.ctrl==="select"){const c=sel[it.id]||0,o=visibleOptions(it).map(o=>`<option value="${o._i}" ${o._i==c?"selected":""}>${esc(o.label)||"선택지"}${o.unit?` (${esc(o.unit)}만)`:""}</option>`).join("");
         h+=`<span class="name">${it.name}</span><select onchange="pickSelect('${it.id}',this.value)">${o}</select>`;}
       else if(it.ctrl==="count"){const c=sel[it.id]||0;let o="";for(let i=0;i<=it.maxc;i++)o+=`<option value="${i}" ${i==c?"selected":""}>${i}${it.cu||"개"}</option>`;
         h+=`<span class="name">${it.name}</span><span class="unit">${uText}</span><select onchange="pickCount('${it.id}',this.value)">${o}</select>`;}
       else if(it.ctrl==="unitcount"){const v=sel[it.id]||{};
-        const t=it.options.map((o,i)=>`<option value="${i}" ${v.t==i?"selected":""}>${o.label} (${o.unit}만)</option>`).join("");
+        const t=visibleOptions(it).map(o=>`<option value="${o._i}" ${v.t==o._i?"selected":""}>${esc(o.label)||"선택지"} (${esc(o.unit)}만)</option>`).join("");
         let c=`<option value="0">0개</option>`;for(let i=1;i<=it.maxc;i++)c+=`<option value="${i}" ${v.c==i?"selected":""}>${i}개</option>`;
         h+=`<span class="name">${it.name}</span><select onchange="pickUC('${it.id}','t',this.value)"><option value="">종류</option>${t}</select><select onchange="pickUC('${it.id}','c',this.value)">${c}</select>`;}
       else if(it.ctrl==="areainput"){const v=sel[it.id]||{};
         h+=`<span class="name">${it.name}</span><input class="numin" type="number" min="0" placeholder="평" value="${v.a||""}" oninput="pickAI('${it.id}','a',this.value)"><span class="unit">×${it.unit}만</span>`;}
       else if(it.ctrl==="areaselect"){const v=sel[it.id]||{};
-        const t=`<option value="">종류</option>`+it.options.map((o,i)=>`<option value="${i}" ${v.t==i?"selected":""}>${o.label} (${o.unit}만)</option>`).join("");
+        const t=`<option value="">종류</option>`+visibleOptions(it).map(o=>`<option value="${o._i}" ${v.t==o._i?"selected":""}>${esc(o.label)||"선택지"} (${esc(o.unit)}만)</option>`).join("");
         h+=`<span class="name">${it.name}</span><input class="numin" type="number" min="0" placeholder="평" value="${v.a||""}" oninput="pickAI('${it.id}','a',this.value)"><select onchange="pickAI('${it.id}','t',this.value)">${t}</select>`;}
       h+=`<span class="amt">${amt?won(amt):"—"}</span></div>`;}
     h+=`</div></div>`;}
   document.getElementById('estForm').innerHTML=h;
 }
-function renderSummary(){const c=calc();document.getElementById('total').textContent=won(c.p7);
+function renderSummary(){const c=calc();document.getElementById('total').textContent=won(c.p11);
   document.getElementById('breakdown').innerHTML=`
-    <div class="srow"><span class="k">직접공사비</span><span class="v">${won(c.p1)}</span></div>
-    <div class="srow"><span class="k">보험료 등 <em>${rate('ins')}%</em></span><span class="v">${won(c.p2)}</span></div>
-    <div class="srow"><span class="k">평당 기본경비 <em>${rate('base')}만/평</em></span><span class="v">${won(c.p3)}</span></div>
-    <div class="srow"><span class="k">일반관리비·이윤 <em>${rate('mgmt')}%</em></span><span class="v">${won(c.p4)}</span></div>
-    <div class="srow sub"><span class="k">공급가액</span><span class="v">${won(c.p5)}</span></div>
-    <div class="srow"><span class="k">부가세 <em>${rate('vat')}%</em></span><span class="v">${won(c.p6)}</span></div>`;}
+    <div class="srow"><span class="k">견적비용</span><span class="v">${won(c.p1)}</span></div>
+    <div class="srow"><span class="k">간접노무비 <em>${rate('indirect_labor')}%</em></span><span class="v">${won(c.p2)}</span></div>
+    <div class="srow"><span class="k">산재보험료 <em>${rate('industrial_ins')}%</em></span><span class="v">${won(c.p3)}</span></div>
+    <div class="srow"><span class="k">고용보험료 <em>${rate('employment_ins')}%</em></span><span class="v">${won(c.p4)}</span></div>
+    <div class="srow"><span class="k">산업안전보건관리비 <em>${rate('safety')}%</em></span><span class="v">${won(c.p5)}</span></div>
+    <div class="srow"><span class="k">건강·연금 보험료 <em>${rate('health_pension')}%</em></span><span class="v">${won(c.p6)}</span></div>
+    <div class="srow"><span class="k">일반관리비 <em>${rate('general_mgmt')}%</em></span><span class="v">${won(c.p7)}</span></div>
+    <div class="srow"><span class="k">이윤 <em>${rate('profit')}%</em></span><span class="v">${won(c.p8)}</span></div>
+    <div class="srow sub"><span class="k">공급가액</span><span class="v">${won(c.p9)}</span></div>
+    <div class="srow"><span class="k">부가세 <em>${rate('vat')}%</em></span><span class="v">${won(c.p10)}</span></div>`;}
 function refresh(){renderEstimate();renderSummary();}
 function onArea(v){area=parseFloat(v)||0;renderSummary();}
 function commitArea(){renderEstimate();}
@@ -373,15 +392,15 @@ function renderAdmin(){let h="";
     h+=`<div class="a-card"><h3>${s.no}. ${s.name} <span class="grp">· ${s.pick==="one"?"택1":"개별"} 그룹 ${s.group}</span>
       <button class="btn ghost sm add" onclick="addItem('${s.group}')">+ 항목 추가</button></h3>
       <table><thead><tr><th>항목명</th><th>계산</th><th style="text-align:right">단가(만원)</th><th></th></tr></thead><tbody>`;
-    for(const it of s.items){const ml={area:"평수×단가",count:"개수×단가",flat:"정액",unitcount:"단가×개수",areainput:"입력평×단가"}[it.mode];
+    for(const it of s.items){const ml={area:"평수×단가",count:"개수×단가",area_count:"개수×평수×단가",flat:"정액",unitcount:"단가×개수",areainput:"입력평×단가"}[it.mode];
       const isOpt=it.options&&(it.mode==="area"||it.mode==="flat"||it.mode==="unitcount"||it.mode==="areainput");
       if(isOpt){
-        it.options.forEach((o,i)=>{if(o.unit===0&&String(o.label).includes("선택"))return;
-          h+=`<tr><td><input class="txt" value="${o.label}" onchange="edOpt('${it.id}',${i},'label',this.value)"> <span class="grp">${it.name}</span></td>
-            <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${o.unit}" onchange="edOpt('${it.id}',${i},'unit',this.value)"></td>
+        it.options.forEach((o,i)=>{if(i===0&&Number(o.unit||0)===0&&String(o.label).includes("선택"))return;
+          h+=`<tr><td><input class="txt" value="${esc(o.label)}" onchange="edOpt('${it.id}',${i},'label',this.value)"> <span class="grp">${esc(it.name)}</span></td>
+            <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${Number(o.unit)||0}" onchange="edOpt('${it.id}',${i},'unit',this.value)"></td>
             <td><button class="optx" title="선택지 삭제" onclick="delOpt('${it.id}',${i})">✕</button></td></tr>`;});
-        h+=`<tr><td colspan="4" style="padding:4px 16px 12px"><button class="addopt" onclick="addOpt('${it.id}')">+ &lsquo;${it.name}&rsquo; 선택지 추가</button>
-          <button class="del" style="margin-left:8px" onclick="delItem('${it.id}')">&lsquo;${it.name}&rsquo; 항목 삭제</button></td></tr>`;
+        h+=`<tr><td colspan="4" style="padding:4px 16px 12px"><button class="addopt" onclick="addOpt('${it.id}')">+ &lsquo;${esc(it.name)}&rsquo; 선택지 추가</button>
+          <button class="del" style="margin-left:8px" onclick="delItem('${it.id}')">&lsquo;${esc(it.name)}&rsquo; 항목 삭제</button></td></tr>`;
       } else {
         h+=`<tr><td><input class="txt" value="${it.name}" onchange="edItem('${it.id}','name',this.value)"></td>
           <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${it.unit}" onchange="edItem('${it.id}','unit',this.value)"></td>
@@ -394,7 +413,7 @@ function renderAdmin(){let h="";
 function flash(){const m=document.getElementById('savedMsg');m.classList.add('show');clearTimeout(m._t);m._t=setTimeout(()=>m.classList.remove('show'),1100);}
 function edItem(id,k,v){const it=findItem(id);it[k]=(k==='unit')?(parseFloat(v)||0):v;flash();
   if(USE_API)api('/api/item','PUT',{id,[k]:it[k]});}
-function edOpt(id,i,k,v){const it=findItem(id);it.options[i][k]=(k==='unit')?(parseFloat(v)||0):v;flash();
+function edOpt(id,i,k,v){const it=findItem(id);it.options[i][k]=(k==='unit')?(parseFloat(v)||0):v;refresh();flash();
   if(USE_API)api('/api/item','PUT',{id,options:it.options});}
 function edRate(id,v){const r=RATES.find(x=>x.id===id);r.val=parseFloat(v)||0;flash();
   if(USE_API)api('/api/rate','PUT',{id,val:r.val});}
@@ -404,9 +423,12 @@ async function delItem(id){if(!confirm("이 항목을 삭제할까요?"))return;
   delete sel[id];renderAdmin();flash();}
 // 기존 드롭다운 항목에 선택지 추가/삭제
 function addOpt(id){const it=findItem(id);it.options=it.options||[];it.options.push({label:"새 선택지",unit:0});
-  if(USE_API)api('/api/item','PUT',{id,options:it.options});renderAdmin();flash();}
+  if(USE_API)api('/api/item','PUT',{id,options:it.options});renderAdmin();refresh();flash();}
 function delOpt(id,i){const it=findItem(id);if(!confirm("이 선택지를 삭제할까요?"))return;
-  it.options.splice(i,1);if(USE_API)api('/api/item','PUT',{id,options:it.options});renderAdmin();flash();}
+  it.options.splice(i,1);
+  if(sel[id]===i)delete sel[id];
+  else if(typeof sel[id]==="number"&&sel[id]>i)sel[id]-=1;
+  if(USE_API)api('/api/item','PUT',{id,options:it.options});renderAdmin();refresh();flash();}
 
 // 항목 추가 모달
 let amGroup=null,amPick="free",amOpts=[];
@@ -457,10 +479,10 @@ function lsGet(){try{return JSON.parse(localStorage.getItem('leople_subs')||'[]'
 function lsSet(a){try{localStorage.setItem('leople_subs',JSON.stringify(a));}catch(e){memStore=a;}}
 function collectPicks(){const picks=[];for(const s of SECTIONS)for(const it of s.items){const amt=amountOf(it);if(amt>0){
   let d=it.name;const v=sel[it.id];
-  if(it.ctrl==="select")d=it.name+" · "+it.options[v||0].label;
+  if(it.ctrl==="select")d=it.name+" · "+((it.options[v||0]&&it.options[v||0].label)||"선택지");
   else if(it.mode==="count")d=it.name+" "+v+(it.cu||"개");
   else if(it.ctrl==="unitcount")d=it.name+" "+(it.options[v.t]?it.options[v.t].label:"")+" "+(v.c||0)+"개";
-  else if(it.mode==="areainput")d=it.name+" "+((v&&v.a)||0)+"평"+(it.ctrl==="areaselect"&&v&&v.t!=null?" "+it.options[v.t].label:"");
+  else if(it.mode==="areainput")d=it.name+" "+((v&&v.a)||0)+"평"+(it.ctrl==="areaselect"&&v&&v.t!=null&&it.options[v.t]?" "+it.options[v.t].label:"");
   picks.push({code:it.code,name:d,amount:amt});}}return picks;}
 async function saveSubmission(){
   const name=document.getElementById('cName').value.trim();
@@ -468,9 +490,9 @@ async function saveSubmission(){
   const email=document.getElementById('cEmail').value.trim();
   if(!name){alert("작성자 이름을 입력해주세요");return;}
   if(area<=0){alert("평수를 입력해주세요");return;}
-  const c=calc();const rec={name,phone,email,area,facade_type:null,selections:collectPicks(),total:c.p7,
-    breakdown:{p1:c.p1,p2:c.p2,p3:c.p3,p4:c.p4,p5:c.p5,p6:c.p6,p7:c.p7},
-    rates:{ins:rate('ins'),base:rate('base'),mgmt:rate('mgmt'),vat:rate('vat')}};
+  const c=calc();const rec={name,phone,email,area,facade_type:null,selections:collectPicks(),total:c.p11,
+    breakdown:{p1:c.p1,p2:c.p2,p3:c.p3,p4:c.p4,p5:c.p5,p6:c.p6,p7:c.p7,p8:c.p8,p9:c.p9,p10:c.p10,p11:c.p11},
+    rates:{indirect_labor:rate('indirect_labor'),industrial_ins:rate('industrial_ins'),employment_ins:rate('employment_ins'),safety:rate('safety'),health_pension:rate('health_pension'),general_mgmt:rate('general_mgmt'),profit:rate('profit'),vat:rate('vat')}};
   if(USE_API){await api('/api/submissions','POST',rec);}
   else{const subs=lsGet();subs.unshift({id:Date.now(),at:new Date().toLocaleString('ko-KR'),...rec});lsSet(subs);}
   document.getElementById('cName').value="";document.getElementById('cPhone').value="";document.getElementById('cEmail').value="";
@@ -489,11 +511,12 @@ async function delSub(id){if(USE_API){await fetch('/api/submissions?id='+id,{met
 
 // 합계 분해 — 저장된 값 있으면 사용, 없으면 선택금액 합 + 현재 요율로 재계산
 function breakdownOf(su){
-  if(su.breakdown&&su.breakdown.p7!=null)return su.breakdown;
-  const p1=Math.round((su.selections||[]).reduce((a,p)=>a+(p.amount||0),0));
-  const R=su.rates||{ins:rate('ins'),base:rate('base'),mgmt:rate('mgmt'),vat:rate('vat')};
-  const p2=Math.round(p1/100*R.ins),p3=Math.round(su.area*R.base),p4=Math.round(p1/100*R.mgmt);
-  const p5=p1+p2+p3+p4,p6=Math.floor(p5/100*R.vat);return {p1,p2,p3,p4,p5,p6,p7:p5+p6};
+  if(su.breakdown&&su.breakdown.p11!=null)return su.breakdown;
+  const p1=(su.selections||[]).reduce((a,p)=>a+(p.amount||0),0);
+  const R=su.rates||{indirect_labor:rate('indirect_labor'),industrial_ins:rate('industrial_ins'),employment_ins:rate('employment_ins'),safety:rate('safety'),health_pension:rate('health_pension'),general_mgmt:rate('general_mgmt'),profit:rate('profit'),vat:rate('vat')};
+  const p2=p1/100*R.indirect_labor,p3=p1/100*R.industrial_ins,p4=p1/100*R.employment_ins;
+  const p5=p1/100*R.safety,p6=p1/100*R.health_pension,p7=p1/100*R.general_mgmt,p8=p1/100*R.profit;
+  const p9=p1+p2+p3+p4+p5+p6+p7+p8,p10=Math.floor(p9/100*R.vat);return {p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11:p9+p10};
 }
 // 시트명 안전화 (엑셀 31자 제한, 금지문자 제거, 중복 시 번호)
 function sheetName(base,used){
@@ -503,19 +526,23 @@ function sheetName(base,used){
 }
 // 한 사람의 상세 시트(aoa) 생성
 function detailAoa(su){
-  const b=breakdownOf(su);const R=su.rates||{ins:rate('ins'),base:rate('base'),mgmt:rate('mgmt'),vat:rate('vat')};
+  const b=breakdownOf(su);const R=su.rates||{indirect_labor:rate('indirect_labor'),industrial_ins:rate('industrial_ins'),employment_ins:rate('employment_ins'),safety:rate('safety'),health_pension:rate('health_pension'),general_mgmt:rate('general_mgmt'),profit:rate('profit'),vat:rate('vat')};
   const aoa=[['레오플 간편견적서'],[],
     ['작성일',su.at||''],['작성자',su.name||''],['연락처',su.phone||''],['이메일',su.email||''],
     ['건축 평수',su.area],[],['공정 / 항목','코드','금액(만원)']];
   (su.selections||[]).forEach(p=>aoa.push([p.name,p.code,p.amount]));
   aoa.push([]);
-  aoa.push(['직접공사비','',b.p1]);
-  aoa.push([`보험료 등 (${R.ins}%)`,'',b.p2]);
-  aoa.push([`평당 기본경비 (${R.base}만/평)`,'',b.p3]);
-  aoa.push([`일반관리비·이윤 (${R.mgmt}%)`,'',b.p4]);
-  aoa.push(['공급가액','',b.p5]);
-  aoa.push([`부가세 (${R.vat}%)`,'',b.p6]);
-  aoa.push(['총 견적금액','',b.p7]);
+  aoa.push(['견적비용','',b.p1]);
+  aoa.push([`간접노무비 (${R.indirect_labor}%)`,'',b.p2]);
+  aoa.push([`산재보험료 (${R.industrial_ins}%)`,'',b.p3]);
+  aoa.push([`고용보험료 (${R.employment_ins}%)`,'',b.p4]);
+  aoa.push([`산업안전보건관리비 (${R.safety}%)`,'',b.p5]);
+  aoa.push([`건강·연금 보험료 (${R.health_pension}%)`,'',b.p6]);
+  aoa.push([`일반관리비 (${R.general_mgmt}%)`,'',b.p7]);
+  aoa.push([`이윤 (${R.profit}%)`,'',b.p8]);
+  aoa.push(['공급가액','',b.p9]);
+  aoa.push([`부가세 (${R.vat}%)`,'',b.p10]);
+  aoa.push(['총 견적금액','',b.p11]);
   return aoa;
 }
 // 건별 상세 엑셀(파일 1개)
@@ -531,11 +558,11 @@ function exportAll(){
   if(!SUBS_CACHE.length)return;
   const wb=XLSX.utils.book_new();const used=new Set();
   // 1) 전체요약 시트
-  const head=['작성일','작성자','연락처','이메일','평수','직접공사비','보험료등','평당경비','관리비이윤','공급가액','부가세','총액(만원)'];
+  const head=['작성일','작성자','연락처','이메일','평수','견적비용','간접노무비','산재보험료','고용보험료','안전관리비','건강연금','일반관리비','이윤','공급가액','부가세','총액(만원)'];
   const rows=SUBS_CACHE.map(su=>{const b=breakdownOf(su);
-    return [su.at||'',su.name||'',su.phone||'',su.email||'',su.area,b.p1,b.p2,b.p3,b.p4,b.p5,b.p6,b.p7];});
+    return [su.at||'',su.name||'',su.phone||'',su.email||'',su.area,b.p1,b.p2,b.p3,b.p4,b.p5,b.p6,b.p7,b.p8,b.p9,b.p10,b.p11];});
   const sum=XLSX.utils.aoa_to_sheet([head,...rows]);
-  sum['!cols']=[{wch:20},{wch:12},{wch:15},{wch:22},{wch:7},{wch:11},{wch:10},{wch:10},{wch:11},{wch:11},{wch:9},{wch:12}];
+  sum['!cols']=[{wch:20},{wch:12},{wch:15},{wch:22},{wch:7},{wch:11},{wch:11},{wch:11},{wch:11},{wch:11},{wch:10},{wch:11},{wch:9},{wch:11},{wch:9},{wch:12}];
   used.add('전체요약');XLSX.utils.book_append_sheet(wb,sum,'전체요약');
   // 2) 고객별 상세 시트
   SUBS_CACHE.forEach(su=>{
@@ -553,13 +580,20 @@ function showTab(w){const m={est:'p-est',adm:'p-adm',sub:'p-sub'};
   document.getElementById('tb-sub').setAttribute('aria-selected',w==='sub');
   if(w==='est')refresh();else if(w==='adm')renderAdmin();else renderSubs();}
 
+function catalogIsSelfEstimate(d){
+  return !!(d&&d.sections&&d.sections.length&&d.rates&&d.rates.some(r=>r.id==="indirect_labor")&&
+    d.sections.some(s=>s.items&&s.items.some(it=>it.id==="f_modular")));
+}
 async function reloadCatalog(){const d=await api('/api/catalog','GET');
+  if(!catalogIsSelfEstimate(d))return;
   SECTIONS.length=0;d.sections.forEach(s=>SECTIONS.push(s));RATES.length=0;d.rates.forEach(r=>RATES.push(r));}
 async function boot(){
   try{const d=await api('/api/catalog','GET');
-    if(d&&d.sections&&d.sections.length){SECTIONS.length=0;d.sections.forEach(s=>SECTIONS.push(s));RATES.length=0;d.rates.forEach(r=>RATES.push(r));USE_API=true;}
+    if(catalogIsSelfEstimate(d)){SECTIONS.length=0;d.sections.forEach(s=>SECTIONS.push(s));RATES.length=0;d.rates.forEach(r=>RATES.push(r));USE_API=true;}
   }catch(e){USE_API=false;}
-  sel['f_steel']=true;sel['e_brick']=true;sel['w_lg']=true;sel['m_elec']=true;sel['m_plumb']=true;
+  area=9;
+  sel['f_modular']=true;sel['e_eps150']=true;sel['r_zinc']=1;sel['w_pvc']=true;sel['w_store']=1;sel['i_mat']=2;sel['m_elec']=true;
+  sel['c_ceil']=true;sel['c_wall']=0;sel['c_abs']=1;sel['c_pocket']=0;sel['p_wall']=2;sel['t_basic']=1;sel['t_black']=0;sel['t_kitchen']=0;sel['x_deck']={a:0,t:0};
   refresh();}
 boot();
 </script></body></html>
