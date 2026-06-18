@@ -266,7 +266,7 @@ function calc(){let d=0;for(const s of SECTIONS)for(const it of s.items)d+=amoun
 
 function renderEstimate(){
   let h=`<div class="card"><div class="area-row"><label for="area">건축 평수</label>
-    <input id="area" type="number" min="0" value="${area||''}" oninput="onArea(this.value)"><span class="u">평</span></div></div>`;
+    <input id="area" type="number" min="0" value="${area||''}" oninput="onArea(this.value)" onchange="commitArea()"><span class="u">평</span></div></div>`;
   for(const s of SECTIONS){const pk=s.pick==="one"?"택1":"개별";
     let secSum=0;for(const it of s.items)secSum+=amountOf(it);
     const isOpen=openSecs.has(s.group);
@@ -303,7 +303,8 @@ function renderSummary(){const c=calc();document.getElementById('total').textCon
     <div class="srow sub"><span class="k">공급가액</span><span class="v">${won(c.p5)}</span></div>
     <div class="srow"><span class="k">부가세 <em>${rate('vat')}%</em></span><span class="v">${won(c.p6)}</span></div>`;}
 function refresh(){renderEstimate();renderSummary();}
-function onArea(v){area=parseFloat(v)||0;renderEstimate();const a=document.getElementById('area');a.focus();a.setSelectionRange(a.value.length,a.value.length);}
+function onArea(v){area=parseFloat(v)||0;renderSummary();}
+function commitArea(){renderEstimate();}
 function resetEstimate(){
   if(!confirm("선택한 항목과 입력 내용을 모두 초기화할까요?"))return;
   for(const k in sel)delete sel[k];
