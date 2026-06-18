@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>레오플 견적 · 1단계 데모</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F7F6F2;--ink:#1A1C20;--muted:#6B6F76;--line:#D9D6CE;--line2:#E8E6DF;
+--indigo:#2E4374;--teal:#0F766E;--amber:#9A6B00;--white:#fff;--rad:4px;
+--disp:"Space Grotesk",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+header{border-bottom:1px solid var(--line);background:linear-gradient(var(--paper),var(--paper)) padding-box,repeating-linear-gradient(90deg,var(--line2) 0 1px,transparent 1px 28px) border-box}
+.head-in{display:flex;align-items:baseline;gap:14px;padding:22px 0 16px;flex-wrap:wrap}
+.logo{font-family:var(--disp);font-weight:700;font-size:22px;letter-spacing:-.02em}.logo b{color:var(--indigo)}
+.tag{font-size:12.5px;color:var(--muted)}
+.demo-pill{margin-left:auto;font-family:var(--disp);font-size:11.5px;font-weight:600;color:var(--amber);border:1px solid #E4D7B8;background:#FBF6E8;padding:5px 10px;border-radius:100px}
+.tabs{display:flex;gap:4px;padding:12px 0 0;flex-wrap:wrap}
+.tab{font-family:var(--disp);font-weight:600;font-size:14px;padding:10px 15px;border:1px solid transparent;border-bottom:none;border-radius:var(--rad) var(--rad) 0 0;color:var(--muted);cursor:pointer;background:none;position:relative;top:1px}
+.tab[aria-selected="true"]{color:var(--ink);background:var(--white);border-color:var(--line)}
+.tab .dot{display:inline-block;width:7px;height:7px;border-radius:2px;background:var(--indigo);margin-right:7px;vertical-align:middle}
+.tab.t2 .dot{background:var(--teal)}.tab.t3 .dot{background:var(--amber)}
+main{padding:24px 0 80px}.panel{display:none}.panel.on{display:block}
+.grid{display:grid;grid-template-columns:1fr 350px;gap:24px;align-items:start}
+@media(max-width:880px){.grid{grid-template-columns:1fr}}
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--rad)}.card+.card{margin-top:14px}
+.card h2{font-family:var(--disp);font-size:13px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--indigo);margin:0;padding:13px 16px;border-bottom:1px solid var(--line2);display:flex;align-items:center;gap:9px}
+.card h2 .no{font-size:11px;color:#fff;background:var(--indigo);width:20px;height:20px;display:grid;place-items:center;border-radius:3px}
+.card h2 .pick{margin-left:auto;font-size:10px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:100px;padding:3px 9px;text-transform:none}
+.body{padding:6px 16px 14px}
+.area-row{display:flex;align-items:center;gap:12px;padding:15px 16px;flex-wrap:wrap}
+.area-row label{font-family:var(--disp);font-weight:600}
+.area-row input{font-family:var(--disp);font-weight:600;font-size:18px;width:110px;text-align:right;padding:9px 12px;border:1px solid var(--line);border-radius:var(--rad);background:var(--paper);color:var(--ink)}
+.area-row input:focus{outline:2px solid var(--indigo);outline-offset:-1px;background:#fff}.area-row .u{color:var(--muted)}
+.opt{display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px dashed var(--line2);flex-wrap:wrap}.opt:last-child{border-bottom:none}
+.opt input[type=radio],.opt input[type=checkbox]{width:17px;height:17px;accent-color:var(--indigo);cursor:pointer;flex:none}
+.opt .name{flex:1;min-width:130px}.opt .unit{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.opt select,.opt input.numin{font-family:var(--body);font-size:13px;padding:5px 7px;border:1px solid var(--line);border-radius:var(--rad);background:#fff;color:var(--ink)}
+.opt select{min-width:120px}.opt input.numin{width:62px;text-align:right}
+.opt .amt{font-family:var(--disp);font-weight:600;font-size:14px;min-width:70px;text-align:right;font-variant-numeric:tabular-nums}
+.opt.off .amt{color:var(--line)}
+.summary{position:sticky;top:16px;background:var(--white);border:1px solid var(--line);border-radius:var(--rad);overflow:hidden}
+.summary .top{background:var(--indigo);color:#fff;padding:15px 16px}
+.summary .top .k{font-size:11.5px;opacity:.85;text-transform:uppercase;font-family:var(--disp)}
+.summary .top .v{font-family:var(--disp);font-weight:700;font-size:29px;margin-top:2px;font-variant-numeric:tabular-nums}
+.summary .top .v small{font-size:14px;font-weight:500;opacity:.85;margin-left:4px}
+.rows{padding:5px 16px 10px}
+.srow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line2);font-size:13px}.srow:last-child{border-bottom:none}
+.srow .k{color:var(--muted)}.srow .k em{font-style:normal;color:var(--amber);font-family:var(--disp);font-size:11px;margin-left:4px}
+.srow .v{font-family:var(--disp);font-weight:600;font-variant-numeric:tabular-nums}
+.srow.sub .k{color:var(--ink);font-weight:600}
+.cust{padding:12px 16px;border-top:1px solid var(--line2)}
+.cust input{width:100%;font-family:var(--body);font-size:13px;padding:8px 10px;border:1px solid var(--line);border-radius:var(--rad);margin-bottom:7px}
+.btn{font-family:var(--disp);font-weight:600;font-size:14px;border:none;border-radius:var(--rad);padding:10px 14px;cursor:pointer}
+.btn.primary{background:var(--indigo);color:#fff;width:100%}.btn.primary:hover{background:#243659}
+.btn.teal{background:var(--teal);color:#fff}.btn.ghost{background:var(--paper);border:1px solid var(--line);color:var(--ink)}
+.btn.sm{font-size:12px;padding:6px 10px}
+.note{font-size:11px;color:var(--muted);padding:0 16px 14px}
+.admin-intro{font-size:13.5px;color:var(--muted);margin:0 0 16px;max-width:720px}
+.a-card{background:var(--white);border:1px solid var(--line);border-radius:var(--rad);margin-bottom:14px}
+.a-card h3{font-family:var(--disp);font-size:13px;font-weight:600;text-transform:uppercase;color:var(--teal);margin:0;padding:12px 16px;border-bottom:1px solid var(--line2);display:flex;align-items:center;gap:8px}
+.a-card h3 .grp{font-size:11px;color:var(--muted);font-weight:500}
+.a-card h3 .add{margin-left:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 16px;border-bottom:1px solid var(--line2)}
+th{font-family:var(--disp);font-size:11px;font-weight:600;text-transform:uppercase;color:var(--muted)}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.a-card input{font-family:var(--disp);font-weight:600;font-size:13px;width:84px;text-align:right;padding:5px 8px;border:1px solid var(--line);border-radius:var(--rad);background:var(--paper)}
+.a-card input.txt{font-family:var(--body);font-weight:500;text-align:left;width:100%;max-width:260px}
+.a-card input:focus{outline:2px solid var(--teal);outline-offset:-1px;background:#fff}
+.modeb{font-size:10.5px;color:var(--muted);font-family:var(--disp);border:1px solid var(--line2);border-radius:3px;padding:2px 6px}
+.saved{display:inline-block;margin-left:10px;font-size:12px;color:var(--teal);opacity:0;transition:opacity .25s}.saved.show{opacity:1}
+.rate-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:14px}@media(max-width:680px){.rate-grid{grid-template-columns:1fr}}
+.rate-item{border:1px solid var(--line2);border-radius:var(--rad);padding:11px 13px}
+.rate-item .rk{font-size:12.5px;font-weight:600}.rate-item .rd{font-size:11px;color:var(--muted);margin-bottom:8px}
+.rate-item .rin{display:flex;align-items:center;gap:7px}.rate-item .rin .suf{font-size:12px;color:var(--muted)}
+.del{color:#B42318;background:none;border:1px solid #F0C7C2;border-radius:var(--rad);font-size:11px;padding:4px 9px;cursor:pointer;font-family:var(--disp)}
+.sub-list{display:flex;flex-direction:column;gap:10px}
+.sub-item{background:var(--white);border:1px solid var(--line);border-radius:var(--rad);padding:13px 16px}
+.sub-item .sh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sub-item .who{font-family:var(--disp);font-weight:600}.sub-item .when{font-size:11.5px;color:var(--muted)}
+.sub-item .tot{font-family:var(--disp);font-weight:700;color:var(--indigo);font-variant-numeric:tabular-nums}
+.sub-item .sel{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6}
+.sub-item .sel b{color:var(--ink);font-weight:600}
+.empty{color:var(--muted);font-size:13.5px;padding:30px;text-align:center;border:1px dashed var(--line);border-radius:var(--rad)}
+footer{border-top:1px solid var(--line);padding:18px 0;font-size:12px;color:var(--muted)}
+</style></head><body>
+<header><div class="wrap">
+  <div class="head-in">
+    <div class="logo">LEO<b>PLE</b></div>
+    <div class="tag">간편견적 1단계 데모 — 관리자에서 항목·단가를 고치면 견적에 즉시 반영됩니다</div>
+    <div class="demo-pill">DEMO</div>
+  </div>
+  <div class="tabs" role="tablist">
+    <button class="tab" id="tb-est" role="tab" aria-selected="true" onclick="showTab('est')"><span class="dot"></span>고객 견적</button>
+    <button class="tab t2" id="tb-adm" role="tab" aria-selected="false" onclick="showTab('adm')"><span class="dot"></span>관리자 · 항목/단가</button>
+    <button class="tab t3" id="tb-sub" role="tab" aria-selected="false" onclick="showTab('sub')"><span class="dot"></span>저장된 견적</button>
+  </div>
+</div></header>
+<main><div class="wrap">
+  <section class="panel on" id="p-est"><div class="grid">
+    <div id="estForm"></div>
+    <aside><div class="summary">
+      <div class="top"><div class="k">총 견적금액 (부가세 포함)</div><div class="v"><span id="total">0</span><small>만원</small></div></div>
+      <div class="rows" id="breakdown"></div>
+      <div class="cust">
+        <input id="cName" placeholder="작성자 이름">
+        <input id="cPhone" placeholder="연락처">
+        <input id="cEmail" placeholder="이메일">
+        <button class="btn primary" onclick="saveSubmission()">이 견적 저장하기</button>
+      </div>
+      <div class="note">셀프견적은 표준금액 기준 개략 참고용이며 현장 여건에 따라 달라질 수 있습니다. (데모: 저장은 이 브라우저에만 기록됩니다)</div>
+    </div></aside>
+  </div></section>
+  <section class="panel" id="p-adm">
+    <p class="admin-intro">현재 운영 견적 사이트의 항목 52개를 전부 옮겨 둔 화면입니다. 단가를 고치거나 항목을 추가/삭제한 뒤 <b>고객 견적</b> 탭으로 가면 바로 반영됩니다. 실제 1단계에서는 이 값들이 DB에 저장됩니다.<span class="saved" id="savedMsg">반영됨 ✓</span></p>
+    <div id="adminBuild"></div>
+    <div class="a-card"><h3>전체 적용 요율 · 부대비</h3><div class="rate-grid" id="rateBuild"></div></div>
+  </section>
+  <section class="panel" id="p-sub">
+    <p class="admin-intro">고객이 "이 견적 저장하기"를 누르면 여기에 쌓입니다. 평수, 선택 항목(의미 태그 포함), 총액이 함께 저장돼요. 이게 2단계 도면·렌더의 입력 데이터가 됩니다.</p>
+    <div id="subBuild"></div>
+  </section>
+</div></main>
+<footer><div class="wrap">레오플 간편견적 1단계 구조 데모 · 전체 52개 항목/단가는 현재 운영 소스에서 추출한 실제 값</div></footer>
+<script>
+// 레오플 견적 전체 항목 — 현재 운영 소스에서 추출
+// mode: area(평수×단가) | count(개수×단가) | flat(정액) | unitcount(단가×개수) | areainput(입력평×단가)
+var SECTIONS = [
+ {no:1,name:"골조공사",group:"frame",pick:"one",items:[
+   {id:"f_wood",code:"frame",name:"경량목구조",ctrl:"radio",mode:"area",unit:140},
+   {id:"f_steel",code:"frame",name:"스틸모듈러구조",ctrl:"radio",mode:"area",unit:140},
+   {id:"f_rc",code:"frame",name:"철근콘크리트조",ctrl:"radio",mode:"area",unit:200},
+   {id:"f_caulk",code:"frame_caulk",name:"골조기밀코킹 (목구조/모듈러만)",ctrl:"check",mode:"area",unit:6},
+ ]},
+ {no:2,name:"외장마감",group:"ext",pick:"one",items:[
+   {id:"e_summer",code:"ext",name:"서머사이딩",ctrl:"radio",mode:"area",unit:55},
+   {id:"e_stuco",code:"ext",name:"60T EPS 위 스타코플랙스",ctrl:"radio",mode:"area",unit:65},
+   {id:"e_brick",code:"ext",name:"점토벽돌 (기본사이즈)",ctrl:"radio",mode:"area",unit:70},
+   {id:"e_ceramic",code:"ext",name:"세라믹사이딩&세라믹타일",ctrl:"radio",mode:"area",unit:100},
+ ]},
+ {no:3,name:"지붕공사",group:"roof",pick:"free",items:[
+   {id:"r_shingle",code:"roof",name:"이중그림자 슁글",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"단면경사",unit:13.2},{label:"박공",unit:26.4}]},
+   {id:"r_zinc",code:"roof",name:"리얼징크",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"단면경사",unit:39.6},{label:"박공",unit:90}]},
+   {id:"r_tile",code:"roof",name:"점토기와",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"단면경사+일반기와",unit:55},{label:"박공+일반기와",unit:110},
+     {label:"단면경사+수입기와",unit:66},{label:"박공+수입기와",unit:132}]},
+ ]},
+ {no:4,name:"창호공사",group:"win",pick:"free",items:[
+   {id:"w_lg",code:"window",name:"LG창호",ctrl:"check",mode:"area",unit:35},
+   {id:"w_us",code:"window",name:"미국식 시스템창호",ctrl:"check",mode:"area",unit:50},
+   {id:"w_de",code:"window",name:"독일식 시스템창호",ctrl:"check",mode:"area",unit:70},
+   {id:"w_eagon",code:"window",name:"이건알루미늄 시스템창호",ctrl:"check",mode:"area",unit:120},
+   {id:"w_sky",code:"window_sky",name:"천창",ctrl:"unitcount",mode:"unitcount",maxc:20,options:[
+     {label:"고정창",unit:100},{label:"열리는 창",unit:140}]},
+   {id:"w_door",code:"entrance",name:"현관문",ctrl:"select",mode:"flat",options:[
+     {label:"선택 안 함",unit:0},{label:"독일식 시스템현관문",unit:180},{label:"도어코코리아 현관문",unit:110}]},
+   {id:"w_store",code:"storage_door",name:"창고문 (방화문기본)",ctrl:"count",mode:"count",unit:25,maxc:20},
+ ]},
+ {no:5,name:"단열공사",group:"ins",pick:"free",items:[
+   {id:"i_mat",code:"insulation",name:"단열재",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"인슐레이션",unit:14},{label:"우레탄 폼",unit:30}]},
+ ]},
+ {no:6,name:"전기 · 설비",group:"mep",pick:"free",items:[
+   {id:"m_elec",code:"electric",name:"전기",ctrl:"check",mode:"area",unit:17},
+   {id:"m_plumb",code:"plumbing",name:"설비 (난방/배관/소방)",ctrl:"check",mode:"area",unit:25},
+ ]},
+ {no:7,name:"방수공사",group:"water",pick:"free",items:[
+   {id:"wp",code:"waterproof",name:"방수 (화장실/테라스/베란다)",ctrl:"count",mode:"count",unit:70,maxc:20},
+ ]},
+ {no:8,name:"목공·인테리어",group:"carp",pick:"free",items:[
+   {id:"c_mold",code:"molding",name:"몰딩공사",ctrl:"check",mode:"area",unit:9.5},
+   {id:"c_well",code:"int_light",name:"우물천정 등박스 (간접조명)",ctrl:"check",mode:"area",unit:7},
+   {id:"c_art",code:"int_light",name:"아트월 등박스 (간접조명)",ctrl:"check",mode:"area",unit:10},
+   {id:"c_ceil",code:"ceiling",name:"천정석고 2P",ctrl:"check",mode:"area",unit:7},
+   {id:"c_wall",code:"wall_board",name:"벽면 석고 / 석고+OSB",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"벽면석고 2P",unit:10},{label:"석고+OSB",unit:20}]},
+   {id:"c_luva",code:"luva",name:"내부 미송목재루바",ctrl:"check",mode:"area",unit:45},
+   {id:"c_abs",code:"abs_door",name:"ABS도어 (문+틀+손잡이)",ctrl:"count",mode:"count",unit:25,maxc:20},
+   {id:"c_pocket",code:"pocket_door",name:"포켓도어",ctrl:"count",mode:"count",unit:55,maxc:20},
+   {id:"c_stair",code:"stair",name:"계단공사",ctrl:"check",mode:"flat",unit:500},
+ ]},
+ {no:9,name:"도배 · 도장",group:"surf",pick:"free",items:[
+   {id:"p_wall",code:"wallpaper",name:"도배",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"전체실크",unit:7},{label:"전체합지",unit:4.55}]},
+   {id:"p_paint",code:"paint",name:"도장",ctrl:"check",mode:"area",unit:15},
+ ]},
+ {no:10,name:"바닥공사",group:"floor",pick:"free",items:[
+   {id:"fl",code:"floor",name:"마루",ctrl:"select",mode:"area",options:[
+     {label:"선택 안 함",unit:0},{label:"원목마루",unit:40.25},{label:"강마루",unit:12.65},
+     {label:"강화마루 소폭",unit:9.66},{label:"강화마루 광폭",unit:8.97},{label:"데코타일",unit:4.83},
+     {label:"장판 1.8T",unit:4.37},{label:"장판 2.0T",unit:5.175},{label:"장판 4.5T",unit:9.775},
+     {label:"폴리싱 타일",unit:12},{label:"포세린 타일",unit:15}]},
+ ]},
+ {no:11,name:"화장실·주방 타일",group:"tile",pick:"free",items:[
+   {id:"t_basic",code:"bath_basic",name:"화장실 기본형 (보급형 도기류)",ctrl:"count",mode:"count",unit:300,maxc:4},
+   {id:"t_black",code:"bath_premium",name:"화장실 블랙타입 (고급형)",ctrl:"count",mode:"count",unit:450,maxc:4},
+   {id:"t_kitchen",code:"kitchen_tile",name:"주방타일",ctrl:"count",mode:"count",unit:1.2,maxc:4},
+ ]},
+ {no:12,name:"가구공사",group:"furn",pick:"free",items:[
+   {id:"k_sink",code:"sink",name:"싱크대",ctrl:"select",mode:"flat",options:[
+     {label:"선택 안 함",unit:0},{label:"2.4m ㅡ형",unit:180},{label:"3.2m ㅡ형",unit:240},
+     {label:"2.4m ㄱ형",unit:200},{label:"3.2m ㄱ형",unit:260}]},
+   {id:"k_tall",code:"tall_cabinet",name:"키큰장(600)+냉장고장(1000)",ctrl:"check",mode:"flat",unit:80},
+   {id:"k_island",code:"island",name:"아일랜드식탁",ctrl:"select",mode:"flat",options:[
+     {label:"선택 안 함",unit:0},{label:"4인용",unit:45},{label:"6인용",unit:65}]},
+   {id:"k_uv",code:"uv_cabinet",name:"UV도장 키큰장 (자수)",ctrl:"count",mode:"count",unit:15,maxc:12,cu:"자"},
+   {id:"k_dress",code:"dressroom",name:"드레스룸 시스템장 (자수)",ctrl:"count",mode:"count",unit:10,maxc:20,cu:"자"},
+ ]},
+ {no:13,name:"가설공사",group:"temp",pick:"free",items:[
+   {id:"s_scaffold",code:"scaffold",name:"아시바 (+정액 120만)",ctrl:"check",mode:"area",unit:9,addflat:120},
+ ]},
+ {no:14,name:"건축 외 공사",group:"extra",pick:"free",items:[
+   {id:"x_attic",code:"attic",name:"다락공사 (평 입력)",ctrl:"areainput",mode:"areainput",unit:220},
+   {id:"x_deck",code:"deck",name:"데크공사 (평 입력)",ctrl:"areaselect",mode:"areainput",options:[
+     {label:"미송방부목데크재",unit:50},{label:"하드우드데크재",unit:65}]},
+   {id:"x_water",code:"ext_water",name:"외부수도공사",ctrl:"check",mode:"flat",unit:100},
+   {id:"x_temp",code:"temp_power",name:"임시전기 및 한전계량기 인입비",ctrl:"check",mode:"flat",unit:150},
+   {id:"x_gas",code:"gas",name:"가스인입비",ctrl:"check",mode:"flat",unit:100},
+ ]},
+];
+var RATES = [
+ {id:"ins",label:"보험료 등",desc:"직접공사비 × %",val:3.8,suf:"%"},
+ {id:"base",label:"평당 기본경비",desc:"평수 × 단가",val:5.35,suf:"만원/평"},
+ {id:"mgmt",label:"일반관리비·이윤",desc:"직접공사비 × %",val:8,suf:"%"},
+ {id:"vat",label:"부가세",desc:"공급가액 × %",val:10,suf:"%"},
+];
+let USE_API=false; const sel={}; let area=20;
+const won=n=>Math.round(n).toLocaleString('ko-KR');
+const rate=id=>RATES.find(r=>r.id===id).val;
+function findItem(id){for(const s of SECTIONS)for(const it of s.items)if(it.id===id)return it;}
+const api=(u,m,b)=>fetch(u,{method:m,headers:{'content-type':'application/json'},body:b?JSON.stringify(b):undefined}).then(r=>r.json());
+
+function amountOf(it){
+  const v=sel[it.id];
+  if(it.mode==="area"){
+    if(it.ctrl==="select"){const o=it.options[v||0];return Math.round(area*(o?o.unit:0));}
+    if(v){let a=area*it.unit;if(it.addflat)a+=it.addflat;return Math.round(a);}return 0;}
+  if(it.mode==="flat"){if(it.ctrl==="select"){const o=it.options[v||0];return o?o.unit:0;}return v?it.unit:0;}
+  if(it.mode==="count"){return Math.round((v||0)*it.unit);}
+  if(it.mode==="unitcount"){const t=v&&v.t!=null?it.options[v.t]:null;const c=v?v.c||0:0;return t?Math.round(t.unit*c):0;}
+  if(it.mode==="areainput"){const a=v&&v.a?parseFloat(v.a)||0:0;
+    if(it.ctrl==="areaselect"){const o=v&&v.t!=null?it.options[v.t]:null;return o?Math.round(a*o.unit):0;}return Math.round(a*it.unit);}
+  return 0;
+}
+function calc(){let d=0;for(const s of SECTIONS)for(const it of s.items)d+=amountOf(it);
+  const p1=Math.round(d),p2=Math.round(p1/100*rate('ins')),p3=Math.round(area*rate('base')),
+  p4=Math.round(p1/100*rate('mgmt')),p5=p1+p2+p3+p4,p6=Math.floor(p5/100*rate('vat'));
+  return {p1,p2,p3,p4,p5,p6,p7:p5+p6};}
+
+function renderEstimate(){
+  let h=`<div class="card"><div class="area-row"><label for="area">건축 평수</label>
+    <input id="area" type="number" min="0" value="${area}" oninput="onArea(this.value)"><span class="u">평</span></div></div>`;
+  for(const s of SECTIONS){const pk=s.pick==="one"?"택1":"개별";
+    h+=`<div class="card"><h2><span class="no">${s.no}</span>${s.name}<span class="pick">${pk}</span></h2><div class="body">`;
+    for(const it of s.items){const amt=amountOf(it),off=amt>0?"":"off";
+      const uText=it.mode==="area"?`평당 ${it.unit}만`:it.mode==="count"?`${it.unit}만/${it.cu||"개"}`:it.mode==="flat"&&it.ctrl==="check"?`정액 ${it.unit}만`:"";
+      h+=`<div class="opt ${off}">`;
+      if(it.ctrl==="radio")h+=`<input type="radio" name="${s.group}" ${sel[it.id]?"checked":""} onchange="pickRadio('${s.group}','${it.id}')"><span class="name">${it.name}</span><span class="unit">${uText}</span>`;
+      else if(it.ctrl==="check")h+=`<input type="checkbox" ${sel[it.id]?"checked":""} onchange="toggle('${it.id}',this.checked)"><span class="name">${it.name}</span><span class="unit">${uText}</span>`;
+      else if(it.ctrl==="select"){const c=sel[it.id]||0,o=it.options.map((o,i)=>`<option value="${i}" ${i==c?"selected":""}>${o.label}${o.unit?` (${o.unit}만)`:""}</option>`).join("");
+        h+=`<span class="name">${it.name}</span><select onchange="pickSelect('${it.id}',this.value)">${o}</select>`;}
+      else if(it.ctrl==="count"){const c=sel[it.id]||0;let o="";for(let i=0;i<=it.maxc;i++)o+=`<option value="${i}" ${i==c?"selected":""}>${i}${it.cu||"개"}</option>`;
+        h+=`<span class="name">${it.name}</span><span class="unit">${uText}</span><select onchange="pickCount('${it.id}',this.value)">${o}</select>`;}
+      else if(it.ctrl==="unitcount"){const v=sel[it.id]||{};
+        const t=it.options.map((o,i)=>`<option value="${i}" ${v.t==i?"selected":""}>${o.label} (${o.unit}만)</option>`).join("");
+        let c=`<option value="0">0개</option>`;for(let i=1;i<=it.maxc;i++)c+=`<option value="${i}" ${v.c==i?"selected":""}>${i}개</option>`;
+        h+=`<span class="name">${it.name}</span><select onchange="pickUC('${it.id}','t',this.value)"><option value="">종류</option>${t}</select><select onchange="pickUC('${it.id}','c',this.value)">${c}</select>`;}
+      else if(it.ctrl==="areainput"){const v=sel[it.id]||{};
+        h+=`<span class="name">${it.name}</span><input class="numin" type="number" min="0" placeholder="평" value="${v.a||""}" oninput="pickAI('${it.id}','a',this.value)"><span class="unit">×${it.unit}만</span>`;}
+      else if(it.ctrl==="areaselect"){const v=sel[it.id]||{};
+        const t=`<option value="">종류</option>`+it.options.map((o,i)=>`<option value="${i}" ${v.t==i?"selected":""}>${o.label} (${o.unit}만)</option>`).join("");
+        h+=`<span class="name">${it.name}</span><input class="numin" type="number" min="0" placeholder="평" value="${v.a||""}" oninput="pickAI('${it.id}','a',this.value)"><select onchange="pickAI('${it.id}','t',this.value)">${t}</select>`;}
+      h+=`<span class="amt">${amt?won(amt):"—"}</span></div>`;}
+    h+=`</div></div>`;}
+  document.getElementById('estForm').innerHTML=h;
+}
+function renderSummary(){const c=calc();document.getElementById('total').textContent=won(c.p7);
+  document.getElementById('breakdown').innerHTML=`
+    <div class="srow"><span class="k">직접공사비</span><span class="v">${won(c.p1)}</span></div>
+    <div class="srow"><span class="k">보험료 등 <em>${rate('ins')}%</em></span><span class="v">${won(c.p2)}</span></div>
+    <div class="srow"><span class="k">평당 기본경비 <em>${rate('base')}만/평</em></span><span class="v">${won(c.p3)}</span></div>
+    <div class="srow"><span class="k">일반관리비·이윤 <em>${rate('mgmt')}%</em></span><span class="v">${won(c.p4)}</span></div>
+    <div class="srow sub"><span class="k">공급가액</span><span class="v">${won(c.p5)}</span></div>
+    <div class="srow"><span class="k">부가세 <em>${rate('vat')}%</em></span><span class="v">${won(c.p6)}</span></div>`;}
+function refresh(){renderEstimate();renderSummary();}
+function onArea(v){area=parseFloat(v)||0;renderEstimate();const a=document.getElementById('area');a.focus();a.setSelectionRange(a.value.length,a.value.length);}
+function pickRadio(g,id){for(const s of SECTIONS)if(s.group===g)for(const it of s.items)delete sel[it.id];sel[id]=true;refresh();}
+function toggle(id,on){if(on)sel[id]=true;else delete sel[id];refresh();}
+function pickSelect(id,i){sel[id]=parseInt(i);refresh();}
+function pickCount(id,i){sel[id]=parseInt(i);refresh();}
+function pickUC(id,k,v){const o=sel[id]||{};o[k]=v===""?null:parseInt(v);sel[id]=o;refresh();}
+function pickAI(id,k,v){const o=sel[id]||{};o[k]=(k==='t')?(v===""?null:parseInt(v)):v;sel[id]=o;renderSummary();
+  const card=event.target.closest('.opt');if(card){const amt=amountOf(findItem(id));card.querySelector('.amt').textContent=amt?won(amt):"—";card.classList.toggle('off',!amt);}}
+
+function renderAdmin(){let h="";
+  for(const s of SECTIONS){
+    h+=`<div class="a-card"><h3>${s.no}. ${s.name} <span class="grp">· ${s.pick==="one"?"택1":"개별"} 그룹 ${s.group}</span>
+      <button class="btn ghost sm add" onclick="addItem('${s.group}')">+ 항목 추가</button></h3>
+      <table><thead><tr><th>항목명</th><th>계산</th><th style="text-align:right">단가(만원)</th><th></th></tr></thead><tbody>`;
+    for(const it of s.items){const ml={area:"평수×단가",count:"개수×단가",flat:"정액",unitcount:"단가×개수",areainput:"입력평×단가"}[it.mode];
+      if(it.options&&(it.mode==="area"||it.mode==="flat"||it.mode==="unitcount"||it.mode==="areainput")){
+        it.options.forEach((o,i)=>{if(o.unit===0&&String(o.label).includes("선택"))return;
+          h+=`<tr><td><input class="txt" value="${o.label}" onchange="edOpt('${it.id}',${i},'label',this.value)"> <span class="grp">${it.name}</span></td>
+            <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${o.unit}" onchange="edOpt('${it.id}',${i},'unit',this.value)"></td><td></td></tr>`;});
+      } else {
+        h+=`<tr><td><input class="txt" value="${it.name}" onchange="edItem('${it.id}','name',this.value)"></td>
+          <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${it.unit}" onchange="edItem('${it.id}','unit',this.value)"></td>
+          <td><button class="del" onclick="delItem('${it.id}')">삭제</button></td></tr>`;}
+    }
+    h+=`</tbody></table></div>`;}
+  document.getElementById('adminBuild').innerHTML=h;
+  document.getElementById('rateBuild').innerHTML=RATES.map(r=>`<div class="rate-item"><div class="rk">${r.label}</div><div class="rd">${r.desc}</div>
+    <div class="rin"><input type="number" step="0.01" value="${r.val}" onchange="edRate('${r.id}',this.value)"><span class="suf">${r.suf}</span></div></div>`).join("");}
+function flash(){const m=document.getElementById('savedMsg');m.classList.add('show');clearTimeout(m._t);m._t=setTimeout(()=>m.classList.remove('show'),1100);}
+function edItem(id,k,v){const it=findItem(id);it[k]=(k==='unit')?(parseFloat(v)||0):v;flash();
+  if(USE_API)api('/api/item','PUT',{id,[k]:it[k]});}
+function edOpt(id,i,k,v){const it=findItem(id);it.options[i][k]=(k==='unit')?(parseFloat(v)||0):v;flash();
+  if(USE_API)api('/api/item','PUT',{id,options:it.options});}
+function edRate(id,v){const r=RATES.find(x=>x.id===id);r.val=parseFloat(v)||0;flash();
+  if(USE_API)api('/api/rate','PUT',{id,val:r.val});}
+async function delItem(id){if(!confirm("이 항목을 삭제할까요?"))return;
+  if(USE_API){await fetch('/api/item?id='+encodeURIComponent(id),{method:'DELETE'});await reloadCatalog();}
+  else{for(const s of SECTIONS){const i=s.items.findIndex(x=>x.id===id);if(i>=0){s.items.splice(i,1);break;}}}
+  delete sel[id];renderAdmin();flash();}
+async function addItem(group){const name=prompt("새 항목 이름:");if(!name)return;const unit=parseFloat(prompt("평당 단가(만원):","0"))||0;
+  if(USE_API){await api('/api/item','POST',{group,name,unit});await reloadCatalog();}
+  else{const s=SECTIONS.find(x=>x.group===group);s.items.push({id:"x"+Date.now(),code:"custom",name,ctrl:"check",mode:"area",unit});}
+  renderAdmin();flash();}
+
+let memStore=[];
+function lsGet(){try{return JSON.parse(localStorage.getItem('leople_subs')||'[]');}catch(e){return memStore;}}
+function lsSet(a){try{localStorage.setItem('leople_subs',JSON.stringify(a));}catch(e){memStore=a;}}
+function collectPicks(){const picks=[];for(const s of SECTIONS)for(const it of s.items){const amt=amountOf(it);if(amt>0){
+  let d=it.name;const v=sel[it.id];
+  if(it.ctrl==="select")d=it.name+" · "+it.options[v||0].label;
+  else if(it.mode==="count")d=it.name+" "+v+(it.cu||"개");
+  else if(it.ctrl==="unitcount")d=it.name+" "+(it.options[v.t]?it.options[v.t].label:"")+" "+(v.c||0)+"개";
+  else if(it.mode==="areainput")d=it.name+" "+((v&&v.a)||0)+"평"+(it.ctrl==="areaselect"&&v&&v.t!=null?" "+it.options[v.t].label:"");
+  picks.push({code:it.code,name:d,amount:amt});}}return picks;}
+async function saveSubmission(){
+  const name=document.getElementById('cName').value.trim();
+  const phone=document.getElementById('cPhone').value.trim();
+  const email=document.getElementById('cEmail').value.trim();
+  if(!name){alert("작성자 이름을 입력해주세요");return;}
+  if(area<=0){alert("평수를 입력해주세요");return;}
+  const c=calc();const rec={name,phone,email,area,facade_type:null,selections:collectPicks(),total:c.p7};
+  if(USE_API){await api('/api/submissions','POST',rec);}
+  else{const subs=lsGet();subs.unshift({id:Date.now(),at:new Date().toLocaleString('ko-KR'),...rec});lsSet(subs);}
+  document.getElementById('cName').value="";document.getElementById('cPhone').value="";document.getElementById('cEmail').value="";
+  alert("견적이 저장되었습니다. '저장된 견적' 탭에서 확인하세요.");}
+async function getSubs(){if(USE_API){try{return await api('/api/submissions','GET');}catch(e){return [];}}return lsGet();}
+async function renderSubs(){const subs=await getSubs();const box=document.getElementById('subBuild');
+  if(!subs.length){box.innerHTML=`<div class="empty">아직 저장된 견적이 없습니다. 고객 견적 탭에서 정보를 입력하고 "이 견적 저장하기"를 눌러보세요.</div>`;return;}
+  box.innerHTML=`<div class="sub-list">`+subs.map(su=>`<div class="sub-item">
+    <div class="sh"><div><span class="who">${su.name}</span> <span class="when">· ${su.area}평 · ${su.at}</span><div class="when">${su.phone||""} ${su.email||""}</div></div>
+      <div class="tot">${won(su.total)} <span style="font-size:12px;font-weight:500">만원</span></div></div>
+    <div class="sel">${su.selections.map(p=>`<b>${p.name}</b> <span style="color:#aaa">[${p.code}]</span> ${won(p.amount)}만`).join(" · ")}</div>
+    <div style="margin-top:8px"><button class="del" onclick="delSub(${su.id})">삭제</button></div></div>`).join("")+`</div>`;}
+async function delSub(id){if(USE_API){await fetch('/api/submissions?id='+id,{method:'DELETE'});}else{lsSet(lsGet().filter(s=>s.id!==id));}renderSubs();}
+
+function showTab(w){const m={est:'p-est',adm:'p-adm',sub:'p-sub'};
+  for(const k in m)document.getElementById(m[k]).classList.toggle('on',k===w);
+  document.getElementById('tb-est').setAttribute('aria-selected',w==='est');
+  document.getElementById('tb-adm').setAttribute('aria-selected',w==='adm');
+  document.getElementById('tb-sub').setAttribute('aria-selected',w==='sub');
+  if(w==='est')refresh();else if(w==='adm')renderAdmin();else renderSubs();}
+
+async function reloadCatalog(){const d=await api('/api/catalog','GET');
+  SECTIONS.length=0;d.sections.forEach(s=>SECTIONS.push(s));RATES.length=0;d.rates.forEach(r=>RATES.push(r));}
+async function boot(){
+  try{const d=await api('/api/catalog','GET');
+    if(d&&d.sections&&d.sections.length){SECTIONS.length=0;d.sections.forEach(s=>SECTIONS.push(s));RATES.length=0;d.rates.forEach(r=>RATES.push(r));USE_API=true;}
+  }catch(e){USE_API=false;}
+  sel['f_steel']=true;sel['e_brick']=true;sel['w_lg']=true;sel['m_elec']=true;sel['m_plumb']=true;
+  refresh();}
+boot();
+</script></body></html>
