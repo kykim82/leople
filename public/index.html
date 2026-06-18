@@ -86,6 +86,20 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .rate-item .rk{font-size:12.5px;font-weight:600}.rate-item .rd{font-size:11px;color:var(--muted);margin-bottom:8px}
 .rate-item .rin{display:flex;align-items:center;gap:7px}.rate-item .rin .suf{font-size:12px;color:var(--muted)}
 .del{color:#B42318;background:none;border:1px solid #F0C7C2;border-radius:var(--rad);font-size:11px;padding:4px 9px;cursor:pointer;font-family:var(--disp)}
+.optx{color:#B42318;background:none;border:none;cursor:pointer;font-size:15px;line-height:1;padding:0 6px}
+.addopt{font-family:var(--disp);font-weight:600;font-size:11.5px;color:var(--teal);background:var(--teal-soft);border:none;border-radius:var(--rad);padding:5px 10px;cursor:pointer;margin:4px 0 2px}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(20,22,28,.45);z-index:50;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+.modal-bg.on{display:flex}
+.modal{background:var(--white);border-radius:8px;max-width:520px;width:100%;padding:22px 22px 18px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.modal h4{font-family:var(--disp);font-size:16px;margin:0 0 16px;color:var(--ink)}
+.modal label{display:block;font-size:12.5px;font-weight:600;color:var(--ink);margin:12px 0 5px}
+.modal input,.modal select{width:100%;font-family:var(--body);font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:var(--rad);background:var(--paper)}
+.modal input:focus,.modal select:focus{outline:2px solid var(--teal);outline-offset:-1px;background:#fff}
+.modal .row2{display:flex;gap:10px}.modal .row2>div{flex:1}
+.optrow{display:flex;gap:8px;align-items:center;margin-bottom:7px}
+.optrow input.l{flex:2}.optrow input.u{flex:1}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.hint{font-size:11.5px;color:var(--muted);margin-top:5px}
 .sub-list{display:flex;flex-direction:column;gap:10px}
 .sub-item{background:var(--white);border:1px solid var(--line);border-radius:var(--rad);padding:13px 16px}
 .sub-item .sh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
@@ -131,6 +145,38 @@ footer{border-top:1px solid var(--line);padding:18px 0;font-size:12px;color:var(
     <div id="adminBuild"></div>
     <div class="a-card"><h3>전체 적용 요율 · 부대비</h3><div class="rate-grid" id="rateBuild"></div></div>
   </section>
+
+  <div class="modal-bg" id="addModal"><div class="modal">
+    <h4>새 항목 추가 — <span id="amSec" style="color:var(--teal)"></span></h4>
+    <label>항목 이름</label>
+    <input id="amName" placeholder="예: 아스팔트 슁글">
+    <label>의미 코드 <span style="font-weight:400;color:var(--muted)">(영문, 2단계 도면용 · 생략 가능)</span></label>
+    <input id="amCode" placeholder="예: roof_asphalt">
+    <label>계산 방식</label>
+    <select id="amType" onchange="amTypeChange()">
+      <option value="areaCheck">평당단가 · 체크박스 (선택 시 평수×단가)</option>
+      <option value="areaSelect">평당단가 · 드롭다운 (종류 중 택1, 평수×단가)</option>
+      <option value="count">개수형 (개수×단가)</option>
+      <option value="flatCheck">정액 · 체크박스 (선택 시 고정금액)</option>
+      <option value="flatSelect">정액 · 드롭다운 (종류 중 택1, 고정금액)</option>
+      <option value="areaInput">입력평 × 단가 (다락식)</option>
+      <option value="areaInputSelect">입력평 × 종류단가 (데크식)</option>
+      <option value="unitcount">단가 × 개수 (천창식: 종류 단가 × 개수)</option>
+    </select>
+    <div id="amUnitWrap"><label>단가 (만원)</label><input id="amUnit" type="number" step="0.01" value="0"></div>
+    <div id="amCountWrap" style="display:none"><div class="row2">
+      <div><label>최대 개수</label><input id="amMaxc" type="number" value="20"></div>
+      <div><label>단위</label><input id="amCu" value="개"></div></div></div>
+    <div id="amOptWrap" style="display:none">
+      <label>선택지 <span style="font-weight:400;color:var(--muted)">(종류별 이름과 단가)</span></label>
+      <div id="amOptList"></div>
+      <button class="addopt" onclick="amAddOptRow()">+ 선택지 추가</button>
+    </div>
+    <div class="modal-btns">
+      <button class="btn ghost" onclick="closeAdd()">취소</button>
+      <button class="btn primary" style="width:auto;padding:10px 20px" onclick="submitAdd()">추가</button>
+    </div>
+  </div></div>
   <section class="panel" id="p-sub">
     <p class="admin-intro">고객이 "이 견적 저장하기"를 누르면 여기에 쌓입니다. 평수, 선택 항목(의미 태그 포함), 총액이 함께 저장돼요. 이게 2단계 도면·렌더의 입력 데이터가 됩니다.</p>
     <div id="subBuild"></div>
@@ -328,10 +374,14 @@ function renderAdmin(){let h="";
       <button class="btn ghost sm add" onclick="addItem('${s.group}')">+ 항목 추가</button></h3>
       <table><thead><tr><th>항목명</th><th>계산</th><th style="text-align:right">단가(만원)</th><th></th></tr></thead><tbody>`;
     for(const it of s.items){const ml={area:"평수×단가",count:"개수×단가",flat:"정액",unitcount:"단가×개수",areainput:"입력평×단가"}[it.mode];
-      if(it.options&&(it.mode==="area"||it.mode==="flat"||it.mode==="unitcount"||it.mode==="areainput")){
+      const isOpt=it.options&&(it.mode==="area"||it.mode==="flat"||it.mode==="unitcount"||it.mode==="areainput");
+      if(isOpt){
         it.options.forEach((o,i)=>{if(o.unit===0&&String(o.label).includes("선택"))return;
           h+=`<tr><td><input class="txt" value="${o.label}" onchange="edOpt('${it.id}',${i},'label',this.value)"> <span class="grp">${it.name}</span></td>
-            <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${o.unit}" onchange="edOpt('${it.id}',${i},'unit',this.value)"></td><td></td></tr>`;});
+            <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${o.unit}" onchange="edOpt('${it.id}',${i},'unit',this.value)"></td>
+            <td><button class="optx" title="선택지 삭제" onclick="delOpt('${it.id}',${i})">✕</button></td></tr>`;});
+        h+=`<tr><td colspan="4" style="padding:4px 16px 12px"><button class="addopt" onclick="addOpt('${it.id}')">+ &lsquo;${it.name}&rsquo; 선택지 추가</button>
+          <button class="del" style="margin-left:8px" onclick="delItem('${it.id}')">&lsquo;${it.name}&rsquo; 항목 삭제</button></td></tr>`;
       } else {
         h+=`<tr><td><input class="txt" value="${it.name}" onchange="edItem('${it.id}','name',this.value)"></td>
           <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${it.unit}" onchange="edItem('${it.id}','unit',this.value)"></td>
@@ -352,10 +402,55 @@ async function delItem(id){if(!confirm("이 항목을 삭제할까요?"))return;
   if(USE_API){await fetch('/api/item?id='+encodeURIComponent(id),{method:'DELETE'});await reloadCatalog();}
   else{for(const s of SECTIONS){const i=s.items.findIndex(x=>x.id===id);if(i>=0){s.items.splice(i,1);break;}}}
   delete sel[id];renderAdmin();flash();}
-async function addItem(group){const name=prompt("새 항목 이름:");if(!name)return;const unit=parseFloat(prompt("평당 단가(만원):","0"))||0;
-  if(USE_API){await api('/api/item','POST',{group,name,unit});await reloadCatalog();}
-  else{const s=SECTIONS.find(x=>x.group===group);s.items.push({id:"x"+Date.now(),code:"custom",name,ctrl:"check",mode:"area",unit});}
-  renderAdmin();flash();}
+// 기존 드롭다운 항목에 선택지 추가/삭제
+function addOpt(id){const it=findItem(id);it.options=it.options||[];it.options.push({label:"새 선택지",unit:0});
+  if(USE_API)api('/api/item','PUT',{id,options:it.options});renderAdmin();flash();}
+function delOpt(id,i){const it=findItem(id);if(!confirm("이 선택지를 삭제할까요?"))return;
+  it.options.splice(i,1);if(USE_API)api('/api/item','PUT',{id,options:it.options});renderAdmin();flash();}
+
+// 항목 추가 모달
+let amGroup=null,amPick="free",amOpts=[];
+function addItem(group){const s=SECTIONS.find(x=>x.group===group);amGroup=group;amPick=s.pick;
+  document.getElementById('amSec').textContent=s.no+". "+s.name;
+  document.getElementById('amName').value="";document.getElementById('amCode').value="";
+  document.getElementById('amType').value="areaCheck";document.getElementById('amUnit').value="0";
+  document.getElementById('amMaxc').value="20";document.getElementById('amCu').value="개";
+  amOpts=[{label:"",unit:0},{label:"",unit:0}];amRenderOpts();amTypeChange();
+  document.getElementById('addModal').classList.add('on');}
+function closeAdd(){document.getElementById('addModal').classList.remove('on');}
+function amTypeChange(){const t=document.getElementById('amType').value;
+  const show=(id,b)=>document.getElementById(id).style.display=b?"":"none";
+  const isOpt=["areaSelect","flatSelect","areaInputSelect","unitcount"].includes(t);
+  const isCount=["count","unitcount"].includes(t);
+  show('amUnitWrap',!isOpt);show('amOptWrap',isOpt);show('amCountWrap',isCount);}
+function amRenderOpts(){document.getElementById('amOptList').innerHTML=amOpts.map((o,i)=>
+  `<div class="optrow"><input class="l" placeholder="선택지 이름 (예: 박공)" value="${o.label}" oninput="amOpts[${i}].label=this.value">
+   <input class="u" type="number" step="0.01" placeholder="단가" value="${o.unit}" oninput="amOpts[${i}].unit=parseFloat(this.value)||0">
+   <button class="optx" onclick="amDelOptRow(${i})">✕</button></div>`).join("");}
+function amAddOptRow(){amOpts.push({label:"",unit:0});amRenderOpts();}
+function amDelOptRow(i){amOpts.splice(i,1);amRenderOpts();}
+async function submitAdd(){
+  const name=document.getElementById('amName').value.trim();
+  if(!name){alert("항목 이름을 입력하세요");return;}
+  const code=document.getElementById('amCode').value.trim()||"custom";
+  const t=document.getElementById('amType').value;
+  const unit=parseFloat(document.getElementById('amUnit').value)||0;
+  const maxc=parseInt(document.getElementById('amMaxc').value)||20;
+  const cu=document.getElementById('amCu').value.trim()||"개";
+  const opts=amOpts.filter(o=>o.label.trim()!=="").map(o=>({label:o.label.trim(),unit:parseFloat(o.unit)||0}));
+  let it={id:"x"+Date.now(),code,name};
+  if(t==="areaCheck"){it.ctrl=(amPick==="one")?"radio":"check";it.mode="area";it.unit=unit;}
+  else if(t==="flatCheck"){it.ctrl="check";it.mode="flat";it.unit=unit;}
+  else if(t==="areaInput"){it.ctrl="areainput";it.mode="areainput";it.unit=unit;}
+  else if(t==="count"){it.ctrl="count";it.mode="count";it.unit=unit;it.maxc=maxc;it.cu=cu;}
+  else if(t==="areaSelect"||t==="flatSelect"){
+    if(!opts.length){alert("선택지를 하나 이상 입력하세요");return;}
+    it.ctrl="select";it.mode=(t==="areaSelect")?"area":"flat";it.options=[{label:"선택 안 함",unit:0},...opts];}
+  else if(t==="areaInputSelect"){if(!opts.length){alert("선택지를 입력하세요");return;}it.ctrl="areaselect";it.mode="areainput";it.options=opts;}
+  else if(t==="unitcount"){if(!opts.length){alert("종류를 하나 이상 입력하세요");return;}it.ctrl="unitcount";it.mode="unitcount";it.options=opts;it.maxc=maxc;}
+  if(USE_API){await api('/api/item','POST',{group:amGroup,...it});await reloadCatalog();}
+  else{SECTIONS.find(x=>x.group===amGroup).items.push(it);}
+  closeAdd();renderAdmin();flash();}
 
 let memStore=[];
 function lsGet(){try{return JSON.parse(localStorage.getItem('leople_subs')||'[]');}catch(e){return memStore;}}
