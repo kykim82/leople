@@ -3,3 +3,7 @@ compatibility_date = "2026-06-01"
 pages_build_output_dir = "./public"
 
 # D1 바인딩 — database_id 는 `wrangler d1 create leople-estimate` 실행 후 나온 값으로 교체
+[[d1_databases]]
+binding = "DB"
+database_name = "leople-estimate"
+database_id = "8af39337-346b-43c7-b36e-d378c5daf0f1"
