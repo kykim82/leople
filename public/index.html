@@ -379,17 +379,18 @@ function breakdownOf(su){
   const p2=Math.round(p1/100*R.ins),p3=Math.round(su.area*R.base),p4=Math.round(p1/100*R.mgmt);
   const p5=p1+p2+p3+p4,p6=Math.floor(p5/100*R.vat);return {p1,p2,p3,p4,p5,p6,p7:p5+p6};
 }
-function safeName(s){return String(s||'견적').replace(/[\\/:*?"<>|]/g,'_').slice(0,40);}
-// 건별 상세 엑셀
-function exportOne(id){
-  const su=SUBS_CACHE.find(s=>String(s.id)===String(id));if(!su)return;
+// 시트명 안전화 (엑셀 31자 제한, 금지문자 제거, 중복 시 번호)
+function sheetName(base,used){
+  let n=String(base||'견적').replace(/[\\\/?*\[\]:]/g,' ').trim().slice(0,28)||'견적';
+  let name=n,i=2;while(used.has(name)){const suf='('+i+')';name=n.slice(0,28-suf.length)+suf;i++;}
+  used.add(name);return name;
+}
+// 한 사람의 상세 시트(aoa) 생성
+function detailAoa(su){
   const b=breakdownOf(su);const R=su.rates||{ins:rate('ins'),base:rate('base'),mgmt:rate('mgmt'),vat:rate('vat')};
-  const aoa=[
-    ['레오플 간편견적서'],[],
+  const aoa=[['레오플 간편견적서'],[],
     ['작성일',su.at||''],['작성자',su.name||''],['연락처',su.phone||''],['이메일',su.email||''],
-    ['건축 평수',su.area],[],
-    ['공정 / 항목','코드','금액(만원)']
-  ];
+    ['건축 평수',su.area],[],['공정 / 항목','코드','금액(만원)']];
   (su.selections||[]).forEach(p=>aoa.push([p.name,p.code,p.amount]));
   aoa.push([]);
   aoa.push(['직접공사비','',b.p1]);
@@ -399,21 +400,32 @@ function exportOne(id){
   aoa.push(['공급가액','',b.p5]);
   aoa.push([`부가세 (${R.vat}%)`,'',b.p6]);
   aoa.push(['총 견적금액','',b.p7]);
-  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  return aoa;
+}
+// 건별 상세 엑셀(파일 1개)
+function exportOne(id){
+  const su=SUBS_CACHE.find(s=>String(s.id)===String(id));if(!su)return;
+  const ws=XLSX.utils.aoa_to_sheet(detailAoa(su));
   ws['!cols']=[{wch:34},{wch:16},{wch:14}];
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'견적서');
   XLSX.writeFile(wb,`견적_${safeName(su.name)}_${su.area}평.xlsx`);
 }
-// 전체 목록 엑셀
+// 전체 목록 엑셀: 전체요약 시트 + 고객별 상세 시트
 function exportAll(){
   if(!SUBS_CACHE.length)return;
-  const head=['작성일','작성자','연락처','이메일','평수','직접공사비','보험료등','평당경비','관리비이윤','공급가액','부가세','총액(만원)','선택항목'];
+  const wb=XLSX.utils.book_new();const used=new Set();
+  // 1) 전체요약 시트
+  const head=['작성일','작성자','연락처','이메일','평수','직접공사비','보험료등','평당경비','관리비이윤','공급가액','부가세','총액(만원)'];
   const rows=SUBS_CACHE.map(su=>{const b=breakdownOf(su);
-    const items=(su.selections||[]).map(p=>`${p.name}(${won(p.amount)}만)`).join(' / ');
-    return [su.at||'',su.name||'',su.phone||'',su.email||'',su.area,b.p1,b.p2,b.p3,b.p4,b.p5,b.p6,b.p7,items];});
-  const ws=XLSX.utils.aoa_to_sheet([head,...rows]);
-  ws['!cols']=[{wch:20},{wch:12},{wch:15},{wch:22},{wch:7},{wch:11},{wch:10},{wch:10},{wch:11},{wch:11},{wch:9},{wch:12},{wch:60}];
-  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'견적목록');
+    return [su.at||'',su.name||'',su.phone||'',su.email||'',su.area,b.p1,b.p2,b.p3,b.p4,b.p5,b.p6,b.p7];});
+  const sum=XLSX.utils.aoa_to_sheet([head,...rows]);
+  sum['!cols']=[{wch:20},{wch:12},{wch:15},{wch:22},{wch:7},{wch:11},{wch:10},{wch:10},{wch:11},{wch:11},{wch:9},{wch:12}];
+  used.add('전체요약');XLSX.utils.book_append_sheet(wb,sum,'전체요약');
+  // 2) 고객별 상세 시트
+  SUBS_CACHE.forEach(su=>{
+    const ws=XLSX.utils.aoa_to_sheet(detailAoa(su));ws['!cols']=[{wch:34},{wch:16},{wch:14}];
+    XLSX.utils.book_append_sheet(wb,ws,sheetName(su.name,used));
+  });
   const d=new Date();const ymd=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
   XLSX.writeFile(wb,`레오플_견적목록_${ymd}.xlsx`);
 }
