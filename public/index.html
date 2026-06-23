@@ -226,6 +226,11 @@ var SECTIONS = [
  ]},
  {no:6,name:"전기 · 설비",group:"mep",pick:"free",items:[
    {id:"m_elec",code:"electric",name:"전기설비 (전기/통신/소방/기본LED조명)",ctrl:"check",mode:"area",unit:35},
+   {id:"m_light",code:"lighting",name:"\uC870\uBA85 \uBE0C\uB79C\uB4DC/\uC0AC\uC591 \uC120\uD0DD",ctrl:"select",mode:"area",options:[
+     {label:"\uAE30\uBCF8 LED \uC870\uBA85 (\uC804\uAE30\uC124\uBE44 \uD3EC\uD568)",unit:0},
+     {label:"\uAD6D\uC0B0 \uC77C\uBC18 LED \uD328\uD0A4\uC9C0",unit:12,material:8,labor:3,expense:1},
+     {label:"\uD544\uB9BD\uC2A4 LED \uD328\uD0A4\uC9C0",unit:19.5,material:14,labor:4,expense:1.5},
+     {label:"LG/\uC0BC\uC131 \uACE0\uAE09 LED \uD328\uD0A4\uC9C0",unit:25,material:18,labor:5,expense:2}]},
    {id:"m_plumb",code:"plumbing",name:"배관설비 (난방/배관)",ctrl:"check",mode:"area",unit:35},
  ]},
  {no:7,name:"방수공사",group:"water",pick:"free",items:[
@@ -296,19 +301,21 @@ const rate=id=>RATES.find(r=>r.id===id).val;
 function findItem(id){for(const s of SECTIONS)for(const it of s.items)if(it.id===id)return it;}
 const api=(u,m,b)=>fetch(u,{method:m,headers:{'content-type':'application/json'},body:b?JSON.stringify(b):undefined}).then(r=>r.json());
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
-const visibleOptions=it=>(it.options||[]).map((o,i)=>({...o,_i:i})).filter(o=>o._i===0||String(o.label||"").trim()||Number(o.unit||0));
+const visibleOptions=it=>(it.options||[]).map((o,i)=>({...o,_i:i})).filter(o=>o._i===0||String(o.label||"").trim()||Number(optionUnit(o)));
+function costParts(o){return {material:Number(o&&o.material)||0,labor:Number(o&&o.labor)||0,expense:Number(o&&o.expense)||0};}
+function optionUnit(o){const p=costParts(o);const sum=p.material+p.labor+p.expense;return sum>0?sum:(Number(o&&o.unit)||0);}
 
 function amountOf(it){
   const v=sel[it.id];
   if(it.mode==="area"){
-    if(it.ctrl==="select"){const o=it.options[v||0];return area*(o?Number(o.unit)||0:0);}
+    if(it.ctrl==="select"){const o=it.options[v||0];return area*optionUnit(o);}
     if(v){let a=area*it.unit;if(it.addflat)a+=it.addflat;return a;}return 0;}
-  if(it.mode==="flat"){if(it.ctrl==="select"){const o=it.options[v||0];return o?Number(o.unit)||0:0;}return v?it.unit:0;}
+  if(it.mode==="flat"){if(it.ctrl==="select"){const o=it.options[v||0];return optionUnit(o);}return v?it.unit:0;}
   if(it.mode==="count"){return (v||0)*it.unit;}
   if(it.mode==="area_count"){return (v||0)*area*it.unit;}
-  if(it.mode==="unitcount"){const t=v&&v.t!=null?it.options[v.t]:null;const c=v?v.c||0:0;return t?(Number(t.unit)||0)*c:0;}
+  if(it.mode==="unitcount"){const t=v&&v.t!=null?it.options[v.t]:null;const c=v?v.c||0:0;return t?optionUnit(t)*c:0;}
   if(it.mode==="areainput"){const a=v&&v.a?parseFloat(v.a)||0:0;
-    if(it.ctrl==="areaselect"){const o=v&&v.t!=null?it.options[v.t]:null;return o?a*(Number(o.unit)||0):0;}return a*it.unit;}
+    if(it.ctrl==="areaselect"){const o=v&&v.t!=null?it.options[v.t]:null;return o?a*optionUnit(o):0;}return a*it.unit;}
   return 0;
 }
 function calc(){let d=0;for(const s of SECTIONS)for(const it of s.items)d+=amountOf(it);
@@ -338,18 +345,18 @@ function renderEstimate(){
       h+=`<div class="opt ${off}">`;
       if(it.ctrl==="radio")h+=`<input type="radio" name="${s.group}" ${sel[it.id]?"checked":""} onchange="pickRadio('${s.group}','${it.id}')"><span class="name">${it.name}</span><span class="unit">${uText}</span>`;
       else if(it.ctrl==="check")h+=`<input type="checkbox" ${sel[it.id]?"checked":""} onchange="toggle('${it.id}',this.checked)"><span class="name">${it.name}</span><span class="unit">${uText}</span>`;
-      else if(it.ctrl==="select"){const c=sel[it.id]||0,o=visibleOptions(it).map(o=>`<option value="${o._i}" ${o._i==c?"selected":""}>${esc(o.label)||"선택지"}${o.unit?` (${esc(o.unit)}만)`:""}</option>`).join("");
+      else if(it.ctrl==="select"){const c=sel[it.id]||0,o=visibleOptions(it).map(o=>`<option value="${o._i}" ${o._i==c?"selected":""}>${esc(o.label)||"선택지"}${optionUnit(o)?` (${esc(optionUnit(o))}만)`:""}</option>`).join("");
         h+=`<span class="name">${it.name}</span><select onchange="pickSelect('${it.id}',this.value)">${o}</select>`;}
       else if(it.ctrl==="count"){const c=sel[it.id]||0;let o="";for(let i=0;i<=it.maxc;i++)o+=`<option value="${i}" ${i==c?"selected":""}>${i}${it.cu||"개"}</option>`;
         h+=`<span class="name">${it.name}</span><span class="unit">${uText}</span><select onchange="pickCount('${it.id}',this.value)">${o}</select>`;}
       else if(it.ctrl==="unitcount"){const v=sel[it.id]||{};
-        const t=visibleOptions(it).map(o=>`<option value="${o._i}" ${v.t==o._i?"selected":""}>${esc(o.label)||"선택지"} (${esc(o.unit)}만)</option>`).join("");
+        const t=visibleOptions(it).map(o=>`<option value="${o._i}" ${v.t==o._i?"selected":""}>${esc(o.label)||"선택지"} (${esc(optionUnit(o))}만)</option>`).join("");
         let c=`<option value="0">0개</option>`;for(let i=1;i<=it.maxc;i++)c+=`<option value="${i}" ${v.c==i?"selected":""}>${i}개</option>`;
         h+=`<span class="name">${it.name}</span><select onchange="pickUC('${it.id}','t',this.value)"><option value="">종류</option>${t}</select><select onchange="pickUC('${it.id}','c',this.value)">${c}</select>`;}
       else if(it.ctrl==="areainput"){const v=sel[it.id]||{};
         h+=`<span class="name">${it.name}</span><input class="numin" type="number" min="0" placeholder="평" value="${v.a||""}" oninput="pickAI('${it.id}','a',this.value)"><span class="unit">×${it.unit}만</span>`;}
       else if(it.ctrl==="areaselect"){const v=sel[it.id]||{};
-        const t=`<option value="">종류</option>`+visibleOptions(it).map(o=>`<option value="${o._i}" ${v.t==o._i?"selected":""}>${esc(o.label)||"선택지"} (${esc(o.unit)}만)</option>`).join("");
+        const t=`<option value="">종류</option>`+visibleOptions(it).map(o=>`<option value="${o._i}" ${v.t==o._i?"selected":""}>${esc(o.label)||"선택지"} (${esc(optionUnit(o))}만)</option>`).join("");
         h+=`<span class="name">${it.name}</span><input class="numin" type="number" min="0" placeholder="평" value="${v.a||""}" oninput="pickAI('${it.id}','a',this.value)"><select onchange="pickAI('${it.id}','t',this.value)">${t}</select>`;}
       h+=`<span class="amt">${amt?won(amt):"—"}</span></div>`;}
     h+=`</div></div>`;}
@@ -391,20 +398,23 @@ function renderAdmin(){let h="";
   for(const s of SECTIONS){
     h+=`<div class="a-card"><h3>${s.no}. ${s.name} <span class="grp">· ${s.pick==="one"?"택1":"개별"} 그룹 ${s.group}</span>
       <button class="btn ghost sm add" onclick="addItem('${s.group}')">+ 항목 추가</button></h3>
-      <table><thead><tr><th>항목명</th><th>계산</th><th style="text-align:right">단가(만원)</th><th></th></tr></thead><tbody>`;
+      <table><thead><tr><th>\uD56D\uBAA9\uBA85</th><th>\uACC4\uC0B0</th><th style="text-align:right">\uB2E8\uAC00(\uB9CC\uC6D0)</th><th style="text-align:right">\uC790\uC7AC\uBE44</th><th style="text-align:right">\uB178\uBB34\uBE44</th><th style="text-align:right">\uACBD\uBE44</th><th></th></tr></thead><tbody>`;
     for(const it of s.items){const ml={area:"평수×단가",count:"개수×단가",area_count:"개수×평수×단가",flat:"정액",unitcount:"단가×개수",areainput:"입력평×단가"}[it.mode];
       const isOpt=it.options&&(it.mode==="area"||it.mode==="flat"||it.mode==="unitcount"||it.mode==="areainput");
       if(isOpt){
         it.options.forEach((o,i)=>{if(i===0&&Number(o.unit||0)===0&&String(o.label).includes("선택"))return;
           h+=`<tr><td><input class="txt" value="${esc(o.label)}" onchange="edOpt('${it.id}',${i},'label',this.value)"> <span class="grp">${esc(it.name)}</span></td>
             <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${Number(o.unit)||0}" onchange="edOpt('${it.id}',${i},'unit',this.value)"></td>
-            <td><button class="optx" title="선택지 삭제" onclick="delOpt('${it.id}',${i})">✕</button></td></tr>`;});
-        h+=`<tr><td colspan="4" style="padding:4px 16px 12px"><button class="addopt" onclick="addOpt('${it.id}')">+ &lsquo;${esc(it.name)}&rsquo; 선택지 추가</button>
+            <td class="num"><input type="number" step="0.01" value="${Number(o.material)||0}" onchange="edOpt('${it.id}',${i},'material',this.value)"></td>
+            <td class="num"><input type="number" step="0.01" value="${Number(o.labor)||0}" onchange="edOpt('${it.id}',${i},'labor',this.value)"></td>
+            <td class="num"><input type="number" step="0.01" value="${Number(o.expense)||0}" onchange="edOpt('${it.id}',${i},'expense',this.value)"></td>
+            <td><button class="optx" title="\uC120\uD0DD\uC9C0 \uC0AD\uC81C" onclick="delOpt('${it.id}',${i})">&times;</button></td></tr>`;});
+        h+=`<tr><td colspan="7" style="padding:4px 16px 12px"><button class="addopt" onclick="addOpt('${it.id}')">+ &lsquo;${esc(it.name)}&rsquo; 선택지 추가</button>
           <button class="del" style="margin-left:8px" onclick="delItem('${it.id}')">&lsquo;${esc(it.name)}&rsquo; 항목 삭제</button></td></tr>`;
       } else {
         h+=`<tr><td><input class="txt" value="${it.name}" onchange="edItem('${it.id}','name',this.value)"></td>
           <td><span class="modeb">${ml}</span></td><td class="num"><input type="number" step="0.01" value="${it.unit}" onchange="edItem('${it.id}','unit',this.value)"></td>
-          <td><button class="del" onclick="delItem('${it.id}')">삭제</button></td></tr>`;}
+          <td></td><td></td><td></td><td><button class="del" onclick="delItem('${it.id}')">??</button></td></tr>`;}
     }
     h+=`</tbody></table></div>`;}
   document.getElementById('adminBuild').innerHTML=h;
@@ -413,7 +423,7 @@ function renderAdmin(){let h="";
 function flash(){const m=document.getElementById('savedMsg');m.classList.add('show');clearTimeout(m._t);m._t=setTimeout(()=>m.classList.remove('show'),1100);}
 function edItem(id,k,v){const it=findItem(id);it[k]=(k==='unit')?(parseFloat(v)||0):v;flash();
   if(USE_API)api('/api/item','PUT',{id,[k]:it[k]});}
-function edOpt(id,i,k,v){const it=findItem(id);it.options[i][k]=(k==='unit')?(parseFloat(v)||0):v;refresh();flash();
+function edOpt(id,i,k,v){const it=findItem(id);it.options[i][k]=(['unit','material','labor','expense'].includes(k))?(parseFloat(v)||0):v;refresh();flash();
   if(USE_API)api('/api/item','PUT',{id,options:it.options});}
 function edRate(id,v){const r=RATES.find(x=>x.id===id);r.val=parseFloat(v)||0;flash();
   if(USE_API)api('/api/rate','PUT',{id,val:r.val});}
@@ -422,7 +432,7 @@ async function delItem(id){if(!confirm("이 항목을 삭제할까요?"))return;
   else{for(const s of SECTIONS){const i=s.items.findIndex(x=>x.id===id);if(i>=0){s.items.splice(i,1);break;}}}
   delete sel[id];renderAdmin();flash();}
 // 기존 드롭다운 항목에 선택지 추가/삭제
-function addOpt(id){const it=findItem(id);it.options=it.options||[];it.options.push({label:"새 선택지",unit:0});
+function addOpt(id){const it=findItem(id);it.options=it.options||[];it.options.push({label:"\uC0C8 \uC120\uD0DD\uC9C0",unit:0,material:0,labor:0,expense:0});
   if(USE_API)api('/api/item','PUT',{id,options:it.options});renderAdmin();refresh();flash();}
 function delOpt(id,i){const it=findItem(id);if(!confirm("이 선택지를 삭제할까요?"))return;
   it.options.splice(i,1);
@@ -437,7 +447,7 @@ function addItem(group){const s=SECTIONS.find(x=>x.group===group);amGroup=group;
   document.getElementById('amName').value="";document.getElementById('amCode').value="";
   document.getElementById('amType').value="areaCheck";document.getElementById('amUnit').value="0";
   document.getElementById('amMaxc').value="20";document.getElementById('amCu').value="개";
-  amOpts=[{label:"",unit:0},{label:"",unit:0}];amRenderOpts();amTypeChange();
+  amOpts=[{label:"",unit:0,material:0,labor:0,expense:0},{label:"",unit:0,material:0,labor:0,expense:0}];amRenderOpts();amTypeChange();
   document.getElementById('addModal').classList.add('on');}
 function closeAdd(){document.getElementById('addModal').classList.remove('on');}
 function amTypeChange(){const t=document.getElementById('amType').value;
@@ -447,9 +457,12 @@ function amTypeChange(){const t=document.getElementById('amType').value;
   show('amUnitWrap',!isOpt);show('amOptWrap',isOpt);show('amCountWrap',isCount);}
 function amRenderOpts(){document.getElementById('amOptList').innerHTML=amOpts.map((o,i)=>
   `<div class="optrow"><input class="l" placeholder="선택지 이름 (예: 박공)" value="${o.label}" oninput="amOpts[${i}].label=this.value">
-   <input class="u" type="number" step="0.01" placeholder="단가" value="${o.unit}" oninput="amOpts[${i}].unit=parseFloat(this.value)||0">
-   <button class="optx" onclick="amDelOptRow(${i})">✕</button></div>`).join("");}
-function amAddOptRow(){amOpts.push({label:"",unit:0});amRenderOpts();}
+   <input class="u" type="number" step="0.01" placeholder="\uB2E8\uAC00" value="${o.unit}" oninput="amOpts[${i}].unit=parseFloat(this.value)||0">
+   <input class="u" type="number" step="0.01" placeholder="\uC790\uC7AC" value="${o.material||0}" oninput="amOpts[${i}].material=parseFloat(this.value)||0">
+   <input class="u" type="number" step="0.01" placeholder="\uB178\uBB34" value="${o.labor||0}" oninput="amOpts[${i}].labor=parseFloat(this.value)||0">
+   <input class="u" type="number" step="0.01" placeholder="\uACBD\uBE44" value="${o.expense||0}" oninput="amOpts[${i}].expense=parseFloat(this.value)||0">
+   <button class="optx" onclick="amDelOptRow(${i})">&times;</button></div>`).join("");}
+function amAddOptRow(){amOpts.push({label:"",unit:0,material:0,labor:0,expense:0});amRenderOpts();}
 function amDelOptRow(i){amOpts.splice(i,1);amRenderOpts();}
 async function submitAdd(){
   const name=document.getElementById('amName').value.trim();
@@ -459,7 +472,7 @@ async function submitAdd(){
   const unit=parseFloat(document.getElementById('amUnit').value)||0;
   const maxc=parseInt(document.getElementById('amMaxc').value)||20;
   const cu=document.getElementById('amCu').value.trim()||"개";
-  const opts=amOpts.filter(o=>o.label.trim()!=="").map(o=>({label:o.label.trim(),unit:parseFloat(o.unit)||0}));
+  const opts=amOpts.filter(o=>o.label.trim()!=="").map(o=>({label:o.label.trim(),unit:parseFloat(o.unit)||0,material:parseFloat(o.material)||0,labor:parseFloat(o.labor)||0,expense:parseFloat(o.expense)||0}));
   let it={id:"x"+Date.now(),code,name};
   if(t==="areaCheck"){it.ctrl=(amPick==="one")?"radio":"check";it.mode="area";it.unit=unit;}
   else if(t==="flatCheck"){it.ctrl="check";it.mode="flat";it.unit=unit;}
@@ -483,7 +496,8 @@ function collectPicks(){const picks=[];for(const s of SECTIONS)for(const it of s
   else if(it.mode==="count")d=it.name+" "+v+(it.cu||"개");
   else if(it.ctrl==="unitcount")d=it.name+" "+(it.options[v.t]?it.options[v.t].label:"")+" "+(v.c||0)+"개";
   else if(it.mode==="areainput")d=it.name+" "+((v&&v.a)||0)+"평"+(it.ctrl==="areaselect"&&v&&v.t!=null&&it.options[v.t]?" "+it.options[v.t].label:"");
-  picks.push({code:it.code,name:d,amount:amt});}}return picks;}
+  let detail=null;if(it.ctrl==="select"&&it.options[v||0])detail=costParts(it.options[v||0]);else if((it.ctrl==="unitcount"||it.ctrl==="areaselect")&&v&&v.t!=null&&it.options[v.t])detail=costParts(it.options[v.t]);
+  picks.push({code:it.code,name:d,amount:amt,detail});}}return picks;}
 async function saveSubmission(){
   const name=document.getElementById('cName').value.trim();
   const phone=document.getElementById('cPhone').value.trim();
@@ -529,8 +543,8 @@ function detailAoa(su){
   const b=breakdownOf(su);const R=su.rates||{indirect_labor:rate('indirect_labor'),industrial_ins:rate('industrial_ins'),employment_ins:rate('employment_ins'),safety:rate('safety'),health_pension:rate('health_pension'),general_mgmt:rate('general_mgmt'),profit:rate('profit'),vat:rate('vat')};
   const aoa=[['레오플 간편견적서'],[],
     ['작성일',su.at||''],['작성자',su.name||''],['연락처',su.phone||''],['이메일',su.email||''],
-    ['건축 평수',su.area],[],['공정 / 항목','코드','금액(만원)']];
-  (su.selections||[]).forEach(p=>aoa.push([p.name,p.code,p.amount]));
+    ['건축 평수',su.area],[],['공정 / 항목','코드','자재비','노무비','경비','금액(만원)']];
+  (su.selections||[]).forEach(p=>{const d=p.detail||{};aoa.push([p.name,p.code,d.material||0,d.labor||0,d.expense||0,p.amount]);});
   aoa.push([]);
   aoa.push(['견적비용','',b.p1]);
   aoa.push([`간접노무비 (${R.indirect_labor}%)`,'',b.p2]);
@@ -549,7 +563,7 @@ function detailAoa(su){
 function exportOne(id){
   const su=SUBS_CACHE.find(s=>String(s.id)===String(id));if(!su)return;
   const ws=XLSX.utils.aoa_to_sheet(detailAoa(su));
-  ws['!cols']=[{wch:34},{wch:16},{wch:14}];
+  ws['!cols']=[{wch:34},{wch:16},{wch:10},{wch:10},{wch:10},{wch:14}];
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'견적서');
   XLSX.writeFile(wb,`견적_${safeName(su.name)}_${su.area}평.xlsx`);
 }
@@ -566,7 +580,7 @@ function exportAll(){
   used.add('전체요약');XLSX.utils.book_append_sheet(wb,sum,'전체요약');
   // 2) 고객별 상세 시트
   SUBS_CACHE.forEach(su=>{
-    const ws=XLSX.utils.aoa_to_sheet(detailAoa(su));ws['!cols']=[{wch:34},{wch:16},{wch:14}];
+    const ws=XLSX.utils.aoa_to_sheet(detailAoa(su));ws['!cols']=[{wch:34},{wch:16},{wch:10},{wch:10},{wch:10},{wch:14}];
     XLSX.utils.book_append_sheet(wb,ws,sheetName(su.name,used));
   });
   const d=new Date();const ymd=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
