@@ -9,10 +9,11 @@ export async function onRequestPost({ request, env }) {  // 추가
     const id = 'x'+Date.now();
     const mode = b.mode || 'area';
     const ctrl = b.ctrl || (mode === 'count' ? 'count' : 'check');
-    const maxc = mode === 'count' ? (b.maxc || 20) : null;
+    const maxc = (mode === 'count' || mode === 'unitcount') ? (b.maxc || 20) : null;
+    const options = b.options !== undefined ? JSON.stringify(b.options) : null;
     await env.DB.prepare(
-      "INSERT INTO items(id,section_id,code,name,ctrl,mode,unit,maxc,sort,active) VALUES(?,?,?,?,?,?,?,?,?,1)"
-    ).bind(id, sec.id, b.code || 'custom', b.name, ctrl, mode, b.unit || 0, maxc, 999).run();
+      "INSERT INTO items(id,section_id,code,name,ctrl,mode,unit,maxc,cu,options,sort,active) VALUES(?,?,?,?,?,?,?,?,?,?,?,1)"
+    ).bind(id, sec.id, b.code || 'custom', b.name, ctrl, mode, b.unit || 0, maxc, b.cu || null, options, 999).run();
     return J({ok:true, id});
   } catch(e){ return J({error:String(e)},500); }
 }
